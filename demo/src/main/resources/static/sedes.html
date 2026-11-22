@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimaya Ramen - Sedes</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #000000;
+            background-image: url('/images/FONDO.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Navbar Fijo */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .nav-link {
+            color: #d1d1d1 !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #e63946 !important;
+            border-bottom: 2px solid #e63946;
+        }
+
+        /* Cabecera */
+        .header-sedes {
+            padding-top: 130px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
+        .japanese-sub {
+            color: #888888;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+        .title-sedes {
+            color: #d32f2f;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .desc-sedes {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+        }
+
+        /* Mapa Principal */
+        .map-container {
+            width: 100%;
+            height: 350px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #3b82f6; 
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Lista de Sedes (Izquierda) */
+        .sedes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        /* Estilos de Scrollbar para la lista */
+        .sedes-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sedes-list::-webkit-scrollbar-track {
+            background: #111; 
+            border-radius: 4px;
+        }
+        .sedes-list::-webkit-scrollbar-thumb {
+            background: #d32f2f; 
+            border-radius: 4px;
+        }
+
+        .sede-card {
+            display: flex;
+            background-color: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 150px; 
+            height: auto;
+        }
+        .sede-card:hover {
+            border-color: #555;
+            background-color: #111;
+        }
+        .sede-card.active {
+            border-color: #d32f2f;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
+        }
+        
+        .sede-img-wrapper {
+            width: 180px;
+            min-width: 180px;
+            position: relative;
+        }
+        .sede-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+        .sede-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .sede-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .sede-detail-text {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sede-detail-text i {
+            color: #d32f2f;
+            font-size: 0.85rem;
+        }
+        .btn-como-llegar {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            transition: background 0.2s;
+            align-self: flex-start;
+        }
+        .btn-como-llegar:hover {
+            background-color: #b71c1c;
+        }
+
+        /* Panel de Detalles (Derecha) */
+        .detalle-panel {
+            background-color: #111111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
+            position: sticky;
+            top: 90px;
+        }
+        .detalle-header {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .detalle-title {
+            font-size: 1.3rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .detalle-title i {
+            color: #d32f2f;
+        }
+        .detalle-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            gap: 12px 5px;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+        }
+        .info-label {
+            color: #777;
+        }
+        .info-value {
+            color: #ccc;
+        }
+        
+        .horario-section {
+            border-top: 1px solid #222;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        .horario-title {
+            color: #777;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .horario-title i {
+            color: #d32f2f;
+        }
+        .horario-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+        
+        .btn-ver-mapa {
+            display: block;
+            width: 100%;
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: background 0.2s;
+        }
+        .btn-ver-mapa:hover {
+            background-color: #b71c1c;
+            color: white;
+        }
+
+        /* Footer */
+        .footer-subbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid #111;
+            padding: 25px 0;
+            font-size: 0.8rem;
+            margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+                <img src="/images/Logo.png" width="50" height="50" class="rounded-circle me-3 shadow" alt="Logo Shimaya" style="object-fit: cover; border: 2px solid #e63946;">
+                <div>
+                    <div class="lh-1 fs-5 tracking-wider">SHIMAYA</div>
+                    <small class="text-danger fw-bold" style="font-size: 0.75rem; letter-spacing: 2px;">RAMEN</small>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carta.html">CARTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reservas.html">RESERVAS</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="sedes.html">SEDES</a></li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="login.html" id="btnPerfilUsuario" class="text-light fs-4"><i class="bi bi-person-circle"></i></a>
+                <a href="carrito.html" class="text-light fs-4 position-relative">
+                    <i class="bi bi-cart3"></i>
+                    <span id="badgeCarritoNav" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; display: none;">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. CABECERA -->
+    <section class="header-sedes container">
+        <div class="japanese-sub">店舗</div>
+        <h1 class="title-sedes">Sedes</h1>
+        <p class="desc-sedes">Visítanos en el lugar de tu preferencia</p>
+    </section>
+
+    <!-- 3. CONTENIDO PRINCIPAL -->
+    <div class="container mb-5">
+        
+        <!-- MAPA DINÁMICO (ARRIBA) -->
+        <div class="map-container" id="map-container">
+            <iframe 
+                id="google-map" 
+                src="https://maps.google.com/maps?q=Shimaya+Ramen+Miraflores&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- LISTA DE SEDES (COLUMNA IZQUIERDA) -->
+            <div class="col-lg-7">
+                <div class="sedes-list" id="sedes-container">
+                    <!-- Las tarjetas se generan aquí con JavaScript -->
+                </div>
+            </div>
+
+            <!-- PANEL DE DETALLES (COLUMNA DERECHA) -->
+            <div class="col-lg-5">
+                <div class="detalle-panel">
+                    <div class="detalle-header">DETALLE DE LA SEDE</div>
+                    
+                    <div class="detalle-title">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span id="det-nombre">Shimaya Ramen - Miraflores</span>
+                    </div>
+                    
+                    <img id="det-img" src="/images/MIRAFLORES.jpg" alt="Sede" class="detalle-img" onerror="this.src='/images/Logo.png'">
+                    
+                    <div class="info-grid">
+                        <div class="info-label"><i class="bi bi-geo"></i></div>
+                        <div class="info-value" id="det-ubicacion">Av. Benavides 123, Miraflores 15074, Lima, Perú</div>
+                        
+                        <div class="info-label"><i class="bi bi-compass"></i></div>
+                        <div class="info-value" id="det-referencia">Frente al Parque Kennedy, a 1 cuadra de Larcomar</div>
+                        
+                        <div class="info-label"><i class="bi bi-telephone"></i></div>
+                        <div class="info-value" id="det-telefono">988 776 665</div>
+                    </div>
+
+                    <div class="horario-section">
+                        <div class="horario-title"><i class="bi bi-clock-history"></i> Horario:</div>
+                        <div class="horario-row">
+                            <span>Lunes a Viernes</span>
+                            <span id="det-h-lv">11:00 AM - 11:00 PM</span>
+                        </div>
+                        <div class="horario-row">
+                            <span>Sábados</span>
+                            <span id="det-h-sab">11:00 AM - 11:30 PM</span>
+                        </div>
+                        <div class="horario-row">
+                            <span>Domingos</span>
+                            <span id="det-h-dom">11:00 AM - 10:30 PM</span>
+                        </div>
+                    </div>
+
+                    <a href="#" id="det-link-mapa" class="btn-ver-mapa" target="_blank">
+                        <i class="bi bi-geo-alt me-2"></i> Ver en Google Maps
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 4. FOOTER -->
+    <div class="footer-subbar">
+        <div class="container">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <small class="text-secondary d-block mb-2">SÍGUENOS</small>
+                    <div class="d-flex justify-content-center justify-content-md-start gap-3 fs-5">
+                        <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <img src="/images/Logo.png" alt="Logo" width="40" height="40" class="rounded-circle mb-2" onerror="this.style.display='none'">
+                    <div class="fw-bold">SHIMAYA</div>
+                    <small class="text-danger d-block">RAMEN</small>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <small class="text-secondary d-block mb-1">ATENCIÓN AL CLIENTE</small>
+                    <small class="d-block text-light"><i class="bi bi-whatsapp text-success me-1"></i> 950 168 895</small>
+                    <small class="text-secondary"><i class="bi bi-envelope me-1"></i> ramen@shimaya.pe</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPTS DE LAS SEDES -->
+    <script>
+        // BASE DE DATOS LOCAL DE LAS SEDES CON TUS IMÁGENES EXACTAS
+        const sedesData = [
+            {
+                id: 'miraflores',
+                nombre: 'MIRAFLORES',
+                direccionCorta: 'Av. Benavides 123, Miraflores',
+                direccionCompleta: 'Av. Benavides 123, Miraflores 15074, Lima, Perú',
+                referencia: 'Frente al Parque Kennedy, a 1 cuadra de Larcomar',
+                telefono: '988 776 665',
+                horarios: { semana: '11:00 AM - 11:00 PM', sabado: '11:00 AM - 11:30 PM', domingo: '11:00 AM - 10:30 PM' },
+                horarioResumen: 'Lunes a domingo',
+                img: '/images/MIRAFLORES.jpg',
+                queryMapa: 'Shimaya+Ramen+Miraflores'
+            },
+            {
+                id: 'santa-anita',
+                nombre: 'SANTA ANITA',
+                direccionCorta: 'Mall Aventura, Santa Anita 15008',
+                direccionCompleta: 'Mall Aventura Plaza, Santa Anita 15008, Lima, Perú',
+                referencia: 'Patio de comidas, 3er nivel',
+                telefono: '971 345 876',
+                horarios: { semana: '10:00 AM - 10:00 PM', sabado: '10:00 AM - 11:00 PM', domingo: '10:00 AM - 10:00 PM' },
+                horarioResumen: 'Lunes a domingo',
+                img: '/images/SANTA ANITA.jpg',
+                queryMapa: 'Shimaya+Ramen+Mall+Aventura+Santa+Anita'
+            },
+            {
+                id: 'san-isidro',
+                nombre: 'SAN ISIDRO',
+                direccionCorta: 'Av. Camino Real, San Isidro',
+                direccionCompleta: 'Av. Camino Real 345, San Isidro, Lima, Perú',
+                referencia: 'A media cuadra del Bosque el Olivar',
+                telefono: '934 765 234',
+                horarios: { semana: '12:00 PM - 10:30 PM', sabado: '12:00 PM - 11:00 PM', domingo: '12:00 PM - 10:00 PM' },
+                horarioResumen: 'Lunes a domingo',
+                img: '/images/SAN ISIDRO.jpg',
+                queryMapa: 'Shimaya+Ramen+San+Isidro'
+            },
+            {
+                id: 'lince',
+                nombre: 'LINCE',
+                direccionCorta: 'Av. Arenales 1890, Lince',
+                direccionCompleta: 'Av. Arenales 1890, Lince, Lima, Perú',
+                referencia: 'Cerca al Centro Comercial Arenales',
+                telefono: '916 667 396',
+                horarios: { semana: '12:00 PM - 11:00 PM', sabado: '12:00 PM - 11:30 PM', domingo: '12:00 PM - 10:30 PM' },
+                horarioResumen: 'Lunes a domingo',
+                img: '/images/LINCE.jpg',
+                queryMapa: 'Shimaya+Ramen+Arenales+Lince'
+            },
+            {
+                id: 'la-molina',
+                nombre: 'LA MOLINA',
+                direccionCorta: 'Av. Flora Tristán 471',
+                direccionCompleta: 'Av. Flora Tristán 471, La Molina, Lima, Perú',
+                referencia: 'Cerca a la Universidad San Martín',
+                telefono: '977 666 237',
+                horarios: { semana: '11:00 AM - 11:00 PM', sabado: '11:00 AM - 11:30 PM', domingo: '11:00 AM - 10:00 PM' },
+                horarioResumen: 'Lunes a domingo',
+                img: '/images/MOLINA.jpg',
+                queryMapa: 'Shimaya+Ramen+Flora+Tristan+La+Molina'
+            },
+            {
+                id: 'san-miguel',
+                nombre: 'SAN MIGUEL',
+                direccionCorta: 'Plaza San Miguel',
+                direccionCompleta: 'Boulevard Plaza San Miguel, Lima, Perú',
+                referencia: 'Zona de restaurantes, Boulevard exterior',
+                telefono: '966 000 908',
+                horarios: { semana: '10:00 AM - 10:30 PM', sabado: '10:00 AM - 11:00 PM', domingo: '10:00 AM - 10:00 PM' },
+                horarioResumen: 'Lunes a domingo',
+                img: '/images/SAN MIGUEL.jpg',
+                queryMapa: 'Shimaya+Ramen+Plaza+San+Miguel'
+            }
+        ];
+
+        function renderSedes() {
+            const container = document.getElementById('sedes-container');
+            container.innerHTML = '';
+
+            sedesData.forEach((sede, index) => {
+                const isActive = index === 0 ? 'active' : '';
+
+                const cardHTML = `
+                    <div class="sede-card ${isActive}" id="card-${sede.id}" onclick="seleccionarSede('${sede.id}')">
+                        <div class="sede-img-wrapper">
+                            <img src="${sede.img}" alt="${sede.nombre}" onerror="this.src='/images/Logo.png'">
+                        </div>
+                        <div class="sede-info">
+                            <div class="sede-title">${sede.nombre}</div>
+                            <div class="sede-detail-text">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>${sede.direccionCorta}</span>
+                            </div>
+                            <div class="sede-detail-text">
+                                <i class="bi bi-telephone"></i>
+                                <span>${sede.telefono}</span>
+                            </div>
+                            <div class="sede-detail-text">
+                                <i class="bi bi-clock"></i>
+                                <span>${sede.horarioResumen}</span>
+                            </div>
+                            <button class="btn-como-llegar" onclick="irAMapa(event, '${sede.queryMapa}')">Cómo llegar</button>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        function irAMapa(event, queryMapa) {
+            event.stopPropagation(); 
+            window.open('https://www.google.com/maps/search/?api=1&query=' + queryMapa, '_blank');
+        }
+
+        function seleccionarSede(id) {
+            document.querySelectorAll('.sede-card').forEach(card => card.classList.remove('active'));
+            document.getElementById(`card-${id}`).classList.add('active');
+
+            const sede = sedesData.find(s => s.id === id);
+
+            document.getElementById('det-nombre').textContent = `Shimaya Ramen - ${sede.nombre}`;
+            document.getElementById('det-img').src = sede.img;
+            document.getElementById('det-ubicacion').textContent = sede.direccionCompleta;
+            document.getElementById('det-referencia').textContent = sede.referencia;
+            document.getElementById('det-telefono').textContent = sede.telefono;
+            document.getElementById('det-h-lv').textContent = sede.horarios.semana;
+            document.getElementById('det-h-sab').textContent = sede.horarios.sabado;
+            document.getElementById('det-h-dom').textContent = sede.horarios.domingo;
+            
+            document.getElementById('det-link-mapa').href = `https://www.google.com/maps/search/?api=1&query=${sede.queryMapa}`;
+
+            const mapIframe = document.getElementById('google-map');
+            const newSrc = `https://maps.google.com/maps?q=${sede.queryMapa}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+            
+            mapIframe.style.opacity = '0.3';
+            setTimeout(() => {
+                mapIframe.src = newSrc;
+                mapIframe.onload = () => { mapIframe.style.opacity = '1'; };
+            }, 300);
+
+            if (window.innerWidth < 992) {
+                document.getElementById('map-container').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSedes();
+            seleccionarSede(sedesData[0].id);
+
+            // Sincronizar ícono de usuario y badge de carrito en navbar
+            const btnUsuario = document.getElementById('btnPerfilUsuario');
+            const estaLogueado = localStorage.getItem('usuarioLogueado') === 'true' && localStorage.getItem('usuarioEmail');
+            if (estaLogueado) {
+                btnUsuario.href = 'perfil.html';
+                btnUsuario.classList.remove('text-light');
+                btnUsuario.classList.add('text-danger');
+            } else {
+                btnUsuario.href = 'login.html';
+            }
+
+            const items = JSON.parse(localStorage.getItem('carritoItems')) || [];
+            const totalUnidades = items.reduce((acc, it) => acc + (it.cantidad || 1), 0);
+            const badge = document.getElementById('badgeCarritoNav');
+            if (estaLogueado && totalUnidades > 0) {
+                badge.textContent = totalUnidades;
+                badge.style.display = 'inline-block';
+            }
+        });
+    </script>
+</body>
+</html>

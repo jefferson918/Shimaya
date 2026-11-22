@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimaya Ramen - Iniciar Sesión y Registro</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- SDK Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #000000;
+            background-image: url('/images/FONDO_LOGIN.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Fijo */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .nav-link {
+            color: #d1d1d1 !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #e63946 !important;
+        }
+
+        /* Contenedor Principal */
+        .login-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding-top: 105px;
+            padding-bottom: 45px;
+        }
+
+        .volver-link {
+            color: #d32f2f;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 30px;
+            transition: color 0.2s;
+        }
+        .volver-link:hover {
+            color: #ff4d4d;
+        }
+
+        /* Columna Izquierda */
+        .welcome-container {
+            padding-right: 30px;
+        }
+        .jap-subtitle {
+            color: #ffffff;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+        .jap-phonetic {
+            color: #d32f2f;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .main-title {
+            font-size: 3.4rem;
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+            text-transform: uppercase;
+        }
+        .welcome-desc {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-width: 380px;
+        }
+
+        /* Columna Derecha (Tarjeta de Formulario) */
+        .login-box {
+            background-color: rgba(18, 18, 18, 0.93);
+            backdrop-filter: blur(12px);
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 36px 32px;
+            width: 100%;
+            max-width: 470px;
+            margin-left: auto;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75);
+        }
+
+        .login-box-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .login-box-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+        .login-box-subtitle {
+            color: #888888;
+            font-size: 0.82rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        .login-box-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background-color: #d32f2f;
+        }
+
+        /* Inputs */
+        .form-label {
+            color: #cccccc;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        .dark-input {
+            background-color: rgba(0, 0, 0, 0.45) !important;
+            border: 1px solid #333333 !important;
+            color: #ffffff !important;
+            border-radius: 8px;
+            padding: 9px 13px;
+            font-size: 0.88rem;
+            transition: all 0.3s;
+        }
+        .dark-input:focus {
+            border-color: #d32f2f !important;
+            box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.2) !important;
+        }
+        .dark-input::placeholder {
+            color: #555555;
+        }
+
+        /* Toggle Ojo Contraseña */
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666666;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .toggle-password:hover {
+            color: #ffffff;
+        }
+
+        /* Opciones */
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+        }
+        .form-check-input {
+            background-color: transparent;
+            border-color: #555;
+            cursor: pointer;
+        }
+        .form-check-input:checked {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+        .link-red {
+            color: #d32f2f;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .link-red:hover {
+            color: #ff4d4d;
+            text-decoration: underline;
+        }
+
+        /* Botón Principal */
+        .btn-login {
+            background-color: #d32f2f;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            width: 100%;
+            padding: 11px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.3s, transform 0.1s;
+        }
+        .btn-login:hover:not(:disabled) {
+            background-color: #b71c1c;
+        }
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Divisor */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #555555;
+            font-size: 0.75rem;
+            margin: 16px 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .divider:not(:empty)::before { margin-right: .6em; }
+        .divider:not(:empty)::after { margin-left: .6em; }
+
+        .register-text {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.82rem;
+            color: #888888;
+        }
+
+        /* Modales Oscuros */
+        .modal-dark .modal-content {
+            background-color: #141414;
+            border: 1px solid #2e2e2e;
+            border-radius: 16px;
+            color: #ffffff;
+        }
+        .modal-dark .modal-header {
+            border-bottom: 1px solid #262626;
+        }
+        .modal-dark .modal-footer {
+            border-top: 1px solid #262626;
+        }
+        .code-input-box {
+            width: 44px;
+            height: 52px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background-color: #0b0b0b;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #ffffff;
+        }
+        .code-input-box:focus {
+            outline: none;
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
+        }
+
+        @media (max-width: 992px) {
+            .welcome-container {
+                margin-bottom: 35px;
+                text-align: center;
+                padding-right: 0;
+            }
+            .welcome-desc {
+                margin: 0 auto;
+            }
+            .login-box {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+                <img src="/images/Logo.png" width="48" height="48" class="rounded-circle me-3 shadow" alt="Logo Shimaya" style="object-fit: cover; border: 2px solid #e63946;" onerror="this.style.display='none'">
+                <div>
+                    <div class="lh-1 fs-5 tracking-wider">SHIMAYA</div>
+                    <small class="text-danger fw-bold" style="font-size: 0.75rem; letter-spacing: 2px;">RAMEN</small>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carta.html">CARTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reservas.html">RESERVAS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sedes.html">SEDES</a></li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="login.html" class="text-danger fs-4"><i class="bi bi-person-circle"></i></a>
+                <a href="carrito.html" class="text-light fs-4"><i class="bi bi-cart3"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. CONTENEDOR PRINCIPAL -->
+    <div class="container login-wrapper">
+        <div class="row w-100 align-items-center me-0 ms-0">
+            
+            <!-- COLUMNA IZQUIERDA (Textos dinámicos Login / Registro) -->
+            <div class="col-lg-6">
+                <div class="welcome-container">
+                    <a href="index.html" class="volver-link">
+                        <i class="bi bi-arrow-left"></i> Volver al inicio
+                    </a>
+                    
+                    <div class="jap-subtitle" id="leftJapSub">お帰りなさい</div>
+                    <div class="jap-phonetic" id="leftJapPhon">Okaeri nasai</div>
+                    
+                    <h1 class="main-title" id="leftMainTitle">BIENVENIDO<br>DE NUEVO</h1>
+                    
+                    <p class="welcome-desc" id="leftDesc">
+                        Inicia sesión para disfrutar de la mejor experiencia en Shimaya.
+                    </p>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div class="col-lg-6">
+                <div class="login-box">
+
+                    <!-- FORMULARIO A: INICIAR SESIÓN -->
+                    <div id="vistaLogin">
+                        <div class="login-box-header">
+                            <h2 class="login-box-title">Iniciar sesión</h2>
+                            <span class="login-box-subtitle">Accede a tu cuenta para continuar</span>
+                        </div>
+
+                        <form onsubmit="iniciarSesion(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control dark-input" id="loginCorreo" placeholder="ejemplo@correo.com" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Contraseña</label>
+                                <div class="password-container">
+                                    <input type="password" class="form-control dark-input" id="loginPassword" placeholder="Escriba su contraseña" required>
+                                    <i class="bi bi-eye-slash toggle-password" id="iconLoginPass" onclick="togglePass('loginPassword', 'iconLoginPass')"></i>
+                                </div>
+                            </div>
+
+                            <div class="options-row">
+                                <div class="form-check d-flex align-items-center gap-2">
+                                    <input class="form-check-input" type="checkbox" id="recordarme" checked>
+                                    <label class="form-check-label text-light" for="recordarme">Recordarme</label>
+                                </div>
+                                <a class="link-red" onclick="mostrarMensajeError('Recuperación', 'Comunícate con soporte o crea una nueva cuenta si olvidaste tu clave.')">¿Olvidaste tu contraseña?</a>
+                            </div>
+
+                            <button type="submit" id="btnSubmitLogin" class="btn-login">Iniciar sesión</button>
+
+                            <div class="divider">o</div>
+
+                            <!-- Botón Oficial de Google Identity Services -->
+                            <div class="d-flex justify-content-center">
+                                <div id="g_id_onload"
+                                     data-client_id="TU_CLIENT_ID_DE_GOOGLE.apps.googleusercontent.com"
+                                     data-callback="handleCredentialResponse"
+                                     data-auto_prompt="false">
+                                </div>
+                                <div class="g_id_signin"
+                                     data-type="standard"
+                                     data-size="large"
+                                     data-theme="filled_black"
+                                     data-text="signin_with"
+                                     data-shape="pill"
+                                     data-logo_alignment="left">
+                                </div>
+                            </div>
+
+                            <div class="register-text">
+                                ¿No tienes cuenta? <a class="link-red fw-bold" onclick="alternarVista('registro')">Regístrate aquí</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- FORMULARIO B: CREAR CUENTA -->
+                    <div id="vistaRegistro" style="display: none;">
+                        <div class="login-box-header">
+                            <h2 class="login-box-title">Crear Cuenta</h2>
+                            <span class="login-box-subtitle">Completa tus datos para unirte a Shimaya</span>
+                        </div>
+
+                        <form onsubmit="crearCuenta(event)">
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label">Nombre *</label>
+                                    <input type="text" class="form-control dark-input" id="regNombre" placeholder="Ej: Jefferson" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Apellidos *</label>
+                                    <input type="text" class="form-control dark-input" id="regApellidos" placeholder="Ej: Sulca" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">Correo Electrónico *</label>
+                                <input type="email" class="form-control dark-input" id="regCorreo" placeholder="correo@ejemplo.com" required>
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label">Teléfono *</label>
+                                    <input type="text" class="form-control dark-input" id="regTelefono" placeholder="987654321" maxlength="15" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Dirección (Opcional)</label>
+                                    <input type="text" class="form-control dark-input" id="regDireccion" placeholder="Av. Principal 123">
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label">Contraseña *</label>
+                                    <div class="password-container">
+                                        <input type="password" class="form-control dark-input" id="regPassword" placeholder="••••••••" required>
+                                        <i class="bi bi-eye-slash toggle-password" id="iconRegPass" onclick="togglePass('regPassword', 'iconRegPass')"></i>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Confirmar *</label>
+                                    <div class="password-container">
+                                        <input type="password" class="form-control dark-input" id="regConfirmPassword" placeholder="••••••••" required>
+                                        <i class="bi bi-eye-slash toggle-password" id="iconRegConf" onclick="togglePass('regConfirmPassword', 'iconRegConf')"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terminos" required checked>
+                                <label class="form-check-label text-secondary small" for="terminos">
+                                    Acepto los términos de servicio y la política de privacidad.
+                                </label>
+                            </div>
+
+                            <button type="submit" id="btnSubmitRegistro" class="btn-login">Crear cuenta</button>
+
+                            <div class="register-text">
+                                ¿Ya tienes cuenta? <a class="link-red fw-bold" onclick="alternarVista('login')">Inicia sesión aquí</a>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- MODAL 1: VERIFICACIÓN DE CÓDIGO DE 6 DÍGITOS -->
+    <div class="modal fade modal-dark" id="modalVerificacion" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-3">
+                <div class="modal-header border-0 justify-content-center pb-0">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; background: rgba(211,47,47,0.15); border: 1px solid #d32f2f;">
+                        <i class="bi bi-envelope-check-fill text-danger fs-2"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <h4 class="fw-bold mb-2">Verifica tu correo</h4>
+                    <p class="text-secondary small mb-3">
+                        Hemos enviado un código de 6 dígitos a <strong class="text-white" id="displayMaskedEmail"></strong>. Ingrésalo para activar tu cuenta en la base de datos:
+                    </p>
+                    <div class="d-flex justify-content-center gap-2 my-3">
+                        <input type="text" maxlength="1" class="code-input-box" id="code1" oninput="moveNext(this, 'code2')">
+                        <input type="text" maxlength="1" class="code-input-box" id="code2" oninput="moveNext(this, 'code3')">
+                        <input type="text" maxlength="1" class="code-input-box" id="code3" oninput="moveNext(this, 'code4')">
+                        <input type="text" maxlength="1" class="code-input-box" id="code4" oninput="moveNext(this, 'code5')">
+                        <input type="text" maxlength="1" class="code-input-box" id="code5" oninput="moveNext(this, 'code6')">
+                        <input type="text" maxlength="1" class="code-input-box" id="code6" oninput="moveNext(this, null)">
+                    </div>
+                    <button type="button" id="btnValidarCodigo" class="btn-login mt-2" onclick="validarCodigo()">Validar Código</button>
+                    <div class="mt-3">
+                        <small class="text-secondary">¿No recibiste el correo? <a class="link-red" onclick="reenviarCodigo()">Reenviar</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ÉXITO -->
+    <div class="modal fade modal-dark" id="modalExito" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-4">
+                <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; background: rgba(25, 135, 84, 0.18); border: 2px solid #198754;">
+                    <i class="bi bi-check-lg text-success fs-1"></i>
+                </div>
+                <h5 class="fw-bold mb-1" id="exitoTitulo">¡Usuario Validado!</h5>
+                <p class="text-secondary small mb-3" id="exitoMensaje">Se registró correctamente.</p>
+                <button type="button" class="btn btn-success w-100 rounded-pill fw-bold" id="btnContinuarExito">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ERROR -->
+    <div class="modal fade modal-dark" id="modalError" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-4">
+                <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; background: rgba(220, 53, 69, 0.18); border: 2px solid #dc3545;">
+                    <i class="bi bi-x-lg text-danger fs-1"></i>
+                </div>
+                <h5 class="fw-bold mb-1" id="errorTitulo">Error</h5>
+                <p class="text-secondary small mb-3" id="errorMensaje">Ocurrió un problema.</p>
+                <button type="button" class="btn btn-danger w-100 rounded-pill fw-bold" data-bs-dismiss="modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPTS DE AUTENTICACIÓN Y SINCRONIZACIÓN CON MYSQL -->
+    <script>
+        const API_USUARIOS = 'http://localhost:8080/api/usuarios';
+        let correoRegistroTemporal = '';
+
+        function togglePass(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            }
+        }
+
+        function alternarVista(vista) {
+            const esRegistro = vista === 'registro';
+            document.getElementById('vistaLogin').style.display = esRegistro ? 'none' : 'block';
+            document.getElementById('vistaRegistro').style.display = esRegistro ? 'block' : 'none';
+
+            if (esRegistro) {
+                document.getElementById('leftJapSub').textContent = 'ようこそ';
+                document.getElementById('leftJapPhon').textContent = 'Yōkoso';
+                document.getElementById('leftMainTitle').innerHTML = 'ÚNETE A<br>SHIMAYA';
+                document.getElementById('leftDesc').textContent = 'Crea tu cuenta para guardar tus direcciones, realizar pedidos rápidos y reservar mesa.';
+            } else {
+                document.getElementById('leftJapSub').textContent = 'お帰りなさい';
+                document.getElementById('leftJapPhon').textContent = 'Okaeri nasai';
+                document.getElementById('leftMainTitle').innerHTML = 'BIENVENIDO<br>DE NUEVO';
+                document.getElementById('leftDesc').textContent = 'Inicia sesión para disfrutar de la mejor experiencia en Shimaya.';
+            }
+        }
+
+        function mostrarMensajeExito(titulo, mensaje, callback) {
+            document.getElementById('exitoTitulo').textContent = titulo;
+            document.getElementById('exitoMensaje').textContent = mensaje;
+            const modal = new bootstrap.Modal(document.getElementById('modalExito'));
+            const btn = document.getElementById('btnContinuarExito');
+            btn.onclick = () => {
+                modal.hide();
+                if (callback) callback();
+            };
+            modal.show();
+        }
+
+        function mostrarMensajeError(titulo, mensaje) {
+            document.getElementById('errorTitulo').textContent = titulo;
+            document.getElementById('errorMensaje').textContent = mensaje;
+            new bootstrap.Modal(document.getElementById('modalError')).show();
+        }
+
+        // Guarda TODOS los datos devueltos por MySQL en localStorage y en shimaya_usuarios_db
+        function guardarSesionCompleta(usuario) {
+            const email = (usuario.email || '').trim();
+            const nombre = usuario.nombre || '';
+            const apellidos = usuario.apellidos || '';
+            const telefono = usuario.telefono || '';
+            const direccion = usuario.direccionHabitual || '';
+
+            localStorage.setItem('usuarioLogueado', 'true');
+            localStorage.setItem('usuarioId', usuario.idUsuario || '');
+            localStorage.setItem('usuarioNombre', nombre);
+            localStorage.setItem('usuarioApellidos', apellidos);
+            localStorage.setItem('usuarioEmail', email);
+            localStorage.setItem('usuarioTelefono', telefono);
+            localStorage.setItem('usuarioDireccion', direccion);
+
+            // Sincronizar también en el almacén por usuario usado por perfil.html y carrito.html
+            if (email) {
+                const key = email.toLowerCase();
+                const db = JSON.parse(localStorage.getItem('shimaya_usuarios_db')) || {};
+                if (!db[key]) {
+                    db[key] = {
+                        nombre: nombre,
+                        apellidos: apellidos,
+                        email: email,
+                        telefono: telefono,
+                        foto: '',
+                        direcciones: [],
+                        pedidos: [],
+                        reservas: []
+                    };
+                } else {
+                    db[key].nombre = nombre || db[key].nombre;
+                    db[key].apellidos = apellidos || db[key].apellidos;
+                    db[key].telefono = telefono || db[key].telefono;
+                }
+
+                if (direccion && direccion.trim() !== '') {
+                    if (!db[key].direcciones) db[key].direcciones = [];
+                    if (db[key].direcciones.length === 0) {
+                        db[key].direcciones.push({
+                            etiqueta: 'CASA',
+                            distrito: 'Lima',
+                            direccionExacta: direccion.trim(),
+                            referencia: '',
+                            principal: true
+                        });
+                    } else {
+                        const idx = db[key].direcciones.findIndex(d => d.principal);
+                        db[key].direcciones[idx >= 0 ? idx : 0].direccionExacta = direccion.trim();
+                    }
+                }
+
+                localStorage.setItem('shimaya_usuarios_db', JSON.stringify(db));
+            }
+        }
+
+        // 1. INICIAR SESIÓN (Actualiza ultimo_acceso y estado_sesion = ACTIVO en MySQL)
+        async function iniciarSesion(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginCorreo').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('btnSubmitLogin');
+
+            btn.disabled = true;
+            btn.textContent = 'Ingresando...';
+
+            try {
+                const response = await fetch(`${API_USUARIOS}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    const usuario = await response.json();
+                    guardarSesionCompleta(usuario);
+                    mostrarMensajeExito('¡Bienvenido!', `Hola ${usuario.nombre}, sesión iniciada correctamente.`, () => {
+                        window.location.href = 'perfil.html';
+                    });
+                } else {
+                    const errorMsg = await response.text();
+                    mostrarMensajeError('Acceso denegado', errorMsg || 'Correo o contraseña incorrectos.');
+                }
+            } catch (error) {
+                console.error('Error al conectar con el backend:', error);
+                mostrarMensajeError('Sin conexión', 'No se pudo conectar con el servidor Spring Boot (puerto 8080).');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Iniciar sesión';
+            }
+        }
+
+        // 2. CREAR CUENTA (Inserta el nuevo usuario en MySQL en estado PENDIENTE y envía código)
+        async function crearCuenta(event) {
+            event.preventDefault();
+
+            const nombre = document.getElementById('regNombre').value.trim();
+            const apellidos = document.getElementById('regApellidos').value.trim();
+            const email = document.getElementById('regCorreo').value.trim();
+            const telefono = document.getElementById('regTelefono').value.trim();
+            const direccion = document.getElementById('regDireccion').value.trim();
+            const pass = document.getElementById('regPassword').value;
+            const confirmPass = document.getElementById('regConfirmPassword').value;
+
+            if (pass !== confirmPass) {
+                mostrarMensajeError('Contraseñas distintas', 'Las contraseñas ingresadas no coinciden.');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitRegistro');
+            btn.disabled = true;
+            btn.textContent = 'Registrando...';
+            correoRegistroTemporal = email;
+
+            try {
+                const response = await fetch(`${API_USUARIOS}/registro`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nombre,
+                        apellidos,
+                        email,
+                        telefono,
+                        direccion,
+                        password: pass
+                    })
+                });
+
+                const data = await response.text();
+
+                if (response.ok) {
+                    abrirModalVerificacion(email);
+                } else {
+                    mostrarMensajeError('No se pudo registrar', data || 'El correo ya se encuentra registrado.');
+                }
+            } catch (error) {
+                console.error('Error en registro:', error);
+                mostrarMensajeError('Sin conexión', 'Error al conectar con el servidor backend.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Crear cuenta';
+            }
+        }
+
+        function enmascararCorreo(correo) {
+            const partes = correo.split('@');
+            if (partes[0].length <= 3) return correo;
+            return partes[0].substring(0, 3) + '****@' + partes[1];
+        }
+
+        function abrirModalVerificacion(correo) {
+            document.getElementById('displayMaskedEmail').textContent = enmascararCorreo(correo);
+            document.querySelectorAll('.code-input-box').forEach(inp => inp.value = '');
+            new bootstrap.Modal(document.getElementById('modalVerificacion')).show();
+            setTimeout(() => document.getElementById('code1').focus(), 400);
+        }
+
+        function moveNext(current, nextFieldID) {
+            current.value = current.value.replace(/[^0-9]/g, '');
+            if (current.value.length >= 1 && nextFieldID) {
+                document.getElementById(nextFieldID).focus();
+            }
+        }
+
+        // 3. VALIDAR CÓDIGO DE 6 DÍGITOS (Actualiza estado_cuenta = VERIFICADO y estado_sesion = ACTIVO en MySQL)
+        async function validarCodigo() {
+            const inputs = document.querySelectorAll('.code-input-box');
+            let codigoIngresado = '';
+            inputs.forEach(input => codigoIngresado += input.value);
+
+            if (codigoIngresado.length !== 6) {
+                mostrarMensajeError('Código incompleto', 'Ingresa los 6 dígitos enviados a tu correo.');
+                return;
+            }
+
+            const btn = document.getElementById('btnValidarCodigo');
+            btn.disabled = true;
+            btn.textContent = 'Validando...';
+
+            try {
+                const response = await fetch(`${API_USUARIOS}/verificar-codigo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: correoRegistroTemporal,
+                        codigo: codigoIngresado
+                    })
+                });
+
+                if (response.ok) {
+                    const usuario = await response.json();
+                    guardarSesionCompleta(usuario);
+
+                    const modalVerif = bootstrap.Modal.getInstance(document.getElementById('modalVerificacion'));
+                    if (modalVerif) modalVerif.hide();
+
+                    mostrarMensajeExito('¡Usuario Validado!', 'Tu cuenta se registró y activó correctamente en la base de datos.', () => {
+                        window.location.href = 'perfil.html';
+                    });
+                } else {
+                    const errorMsg = await response.text();
+                    mostrarMensajeError('Código inválido', errorMsg || 'El código ingresado es incorrecto.');
+                }
+            } catch (error) {
+                console.error('Error al verificar código:', error);
+                mostrarMensajeError('Sin conexión', 'Error de conexión al verificar el código.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Validar Código';
+            }
+        }
+
+        function reenviarCodigo() {
+            mostrarMensajeError('Reenvío de código', 'Si tu código expiró, vuelve a enviar el formulario de registro o revisa tu carpeta de Spam.');
+        }
+
+        // 4. INICIO DE SESIÓN CON GOOGLE (Registra o actualiza ultimo_acceso y estado_sesion en MySQL)
+        async function handleCredentialResponse(response) {
+            try {
+                const payload = parseJwt(response.credential);
+                const res = await fetch(`${API_USUARIOS}/google-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: payload.email,
+                        nombre: payload.given_name || payload.name,
+                        apellidos: payload.family_name || '',
+                        googleId: payload.sub
+                    })
+                });
+
+                if (res.ok) {
+                    const usuario = await res.json();
+                    guardarSesionCompleta(usuario);
+                    mostrarMensajeExito('¡Bienvenido!', 'Inicio de sesión con Google exitoso.', () => {
+                        window.location.href = 'perfil.html';
+                    });
+                } else {
+                    mostrarMensajeError('Error Google', 'No se pudo iniciar sesión con Google.');
+                }
+            } catch (err) {
+                console.error('Error Google Login:', err);
+                mostrarMensajeError('Sin conexión', 'No se pudo conectar con el servidor.');
+            }
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join(''));
+            return JSON.parse(jsonPayload);
+        }
+    </script>
+</body>
+</html>

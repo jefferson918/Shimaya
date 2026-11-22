@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimaya Ramen - Reservas</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #000000;
+            background-image: url('/images/FONDO.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Navbar Fijo */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .nav-link {
+            color: #d1d1d1 !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #e63946 !important;
+            border-bottom: 2px solid #e63946;
+        }
+
+        /* Cabecera */
+        .header-reservas {
+            padding-top: 120px;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .japanese-sub {
+            color: #888888;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+        .title-reservas {
+            color: #d32f2f;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+        .desc-reservas {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Contenedor Principal del Formulario */
+        .reserva-box {
+            border: 1px solid #d32f2f;
+            border-radius: 12px;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 60px;
+        }
+
+        /* Estilos de las secciones del formulario */
+        .section-label {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-label i {
+            color: #d32f2f;
+            font-size: 1.1rem;
+        }
+
+        /* Inputs Oscuros (Fecha, Textarea) */
+        .dark-input {
+            background-color: transparent !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: border-color 0.3s;
+        }
+        .dark-input:focus {
+            border-color: #d32f2f !important;
+            box-shadow: none !important;
+        }
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        /* Botones Seleccionables (Hora, Personas, Ocasión) */
+        .options-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .btn-selectable {
+            background-color: transparent;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            flex: 1 1 auto;
+            text-align: center;
+            min-width: 60px;
+        }
+        .btn-selectable:hover {
+            border-color: #555;
+            background-color: rgba(255,255,255,0.05);
+        }
+        .btn-selectable.active {
+            border-color: #d32f2f;
+            background-color: rgba(211, 47, 47, 0.15);
+            color: #fff;
+            box-shadow: inset 0 0 10px rgba(211, 47, 47, 0.25);
+        }
+
+        /* Carrusel de Sedes */
+        .sedes-carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .sedes-carousel {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 5px 0;
+            flex-grow: 1;
+        }
+        .sedes-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .sedes-carousel {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .sede-select-card {
+            min-width: 220px;
+            background-color: transparent;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+        .sede-select-card:hover {
+            opacity: 1;
+            border-color: #555;
+        }
+        .sede-select-card.active {
+            opacity: 1;
+            border-color: #d32f2f;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.25);
+        }
+        .sede-select-card img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+        }
+        .sede-select-info {
+            padding: 10px;
+        }
+        .sede-select-title {
+            color: #d32f2f;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .sede-select-address {
+            color: #888;
+            font-size: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .carousel-btn {
+            background-color: #222;
+            color: #888;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+            position: absolute;
+        }
+        .carousel-btn:hover {
+            background-color: #d32f2f;
+            color: #fff;
+        }
+        .carousel-btn.left { left: -15px; }
+        .carousel-btn.right { right: -15px; }
+
+        /* Divisores sutiles */
+        .divider {
+            height: 1px;
+            background-color: #333;
+            margin: 25px 0;
+            width: 100%;
+        }
+
+        /* Botón Confirmar */
+        .btn-confirmar {
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            display: block;
+            transition: all 0.3s;
+        }
+        .btn-confirmar.listo, .btn-confirmar:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Footer */
+        .footer-subbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid #111;
+            padding: 25px 0;
+            font-size: 0.8rem;
+        }
+
+        /* Toast y Modal de No Logueado (igual que en Carta) */
+        .toast-error-login {
+            position: fixed;
+            top: 82px;
+            right: 22px;
+            background-color: #e63946;
+            color: #ffffff;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 9px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+            z-index: 1080;
+        }
+        .toast-error-login.show {
+            display: flex;
+            animation: fadeInToast 0.25s ease;
+        }
+        @keyframes fadeInToast {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-no-login .modal-content {
+            background-color: #161616;
+            border: 1px solid #e63946;
+            border-radius: 12px;
+            color: #ffffff;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+        }
+        .modal-no-login .modal-header {
+            border-bottom: 1px solid #282828;
+            padding: 14px 20px;
+        }
+        .modal-no-login .modal-footer {
+            border-top: 1px solid #282828;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 20px;
+        }
+        .btn-modal-cerrar {
+            background-color: transparent;
+            border: 1px solid #444;
+            color: #cccccc;
+            border-radius: 6px;
+            padding: 7px 22px;
+            font-size: 0.88rem;
+        }
+        .btn-modal-cerrar:hover {
+            border-color: #666;
+            color: #ffffff;
+        }
+        .btn-modal-login {
+            background-color: #e63946;
+            border: none;
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 7px 22px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-modal-login:hover {
+            background-color: #c92a37;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+                <img src="/images/Logo.png" width="50" height="50" class="rounded-circle me-3 shadow" alt="Logo Shimaya" style="object-fit: cover; border: 2px solid #e63946;" onerror="this.style.display='none'">
+                <div>
+                    <div class="lh-1 fs-5 tracking-wider">SHIMAYA</div>
+                    <small class="text-danger fw-bold" style="font-size: 0.75rem; letter-spacing: 2px;">RAMEN</small>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carta.html">CARTA</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="reservas.html">RESERVAS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sedes.html">SEDES</a></li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="login.html" id="btnPerfilUsuario" class="text-light fs-4 text-decoration-none d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-person-circle"></i>
+                    <span id="textoUsuarioNav" style="font-size: 0.9rem; font-weight: 500;">Iniciar sesión</span>
+                </a>
+                <a href="carrito.html" onclick="verificarAccesoCarrito(event)" class="text-light fs-4 position-relative">
+                    <i class="bi bi-cart3"></i>
+                    <span id="badgeCarritoNav" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; display: none;">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- TOAST ERROR LOGIN -->
+    <div id="toastNoLogueado" class="toast-error-login">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <span>Error: No hay nadie logueado. Inicia sesión primero.</span>
+    </div>
+
+    <!-- MODAL NO HAY NADIE LOGUEADO -->
+    <div class="modal fade modal-no-login" id="modalNoLogueado" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title fw-bold text-danger d-flex align-items-center gap-2 mb-0">
+                        <i class="bi bi-lock-fill"></i> No hay nadie logueado
+                    </h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center py-4 px-4">
+                    <div class="mb-3" style="font-size: 2.3rem; color: #e63946;">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+                    <h6 class="fw-bold text-white mb-2" id="modalNoLogueadoSubtitulo">No se puede abrir el carrito</h6>
+                    <p class="text-secondary small mb-0" id="modalNoLogueadoDesc">
+                        Debes iniciar sesión con tu cuenta antes de agregar productos o abrir el carrito.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-cerrar" data-bs-dismiss="modal">Cerrar</button>
+                    <a href="login.html" class="btn-modal-login">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CABECERA -->
+    <section class="header-reservas container">
+        <div class="japanese-sub">予約</div>
+        <h1 class="title-reservas" style="font-family: 'Segoe UI', Tahoma, sans-serif;">Reservas</h1>
+        <p class="desc-reservas">Asegura tu lugar y disfruta de la experiencia de Shimaya Ramen</p>
+    </section>
+
+    <!-- 3. FORMULARIO DE RESERVA -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-md-11">
+                
+                <div class="reserva-box">
+                    <form id="formReserva" onsubmit="enviarReserva(event)">
+                        
+                        <!-- FILA 1: FECHA Y HORA -->
+                        <div class="row g-4 mb-2">
+                            <div class="col-md-4">
+                                <div class="section-label"><i class="bi bi-calendar-event"></i> FECHA</div>
+                                <input type="date" class="form-control dark-input w-100" id="fechaReserva" onchange="actualizarEstadoBoton()" required>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <div class="section-label"><i class="bi bi-clock"></i> HORA</div>
+                                <div class="options-row" id="horas-container">
+                                    <div class="btn-selectable" onclick="selectOption(this, 'hora')">18:00</div>
+                                    <div class="btn-selectable" onclick="selectOption(this, 'hora')">18:30</div>
+                                    <div class="btn-selectable" onclick="selectOption(this, 'hora')">19:00</div>
+                                    <div class="btn-selectable" onclick="selectOption(this, 'hora')">19:30</div>
+                                    <div class="btn-selectable" onclick="selectOption(this, 'hora')">20:00</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FILA 2: PERSONAS -->
+                        <div class="section-label"><i class="bi bi-people"></i> PERSONAS</div>
+                        <div class="options-row" id="personas-container">
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">1</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">2</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">3</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">4</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">5</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">6</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">7</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'personas')">8+</div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- FILA 3: SEDE -->
+                        <div class="section-label"><i class="bi bi-geo-alt"></i> SEDE</div>
+                        <div class="sedes-carousel-wrapper">
+                            <button type="button" class="carousel-btn left" onclick="scrollCarousel(-235)"><i class="bi bi-chevron-left"></i></button>
+                            
+                            <div class="sedes-carousel" id="sedesCarousel">
+                                <div class="sede-select-card" onclick="selectSede(this, 'Miraflores', 1)">
+                                    <img src="/images/MIRAFLORES.jpg" alt="Sede Miraflores" onerror="this.src='/images/Logo.png'">
+                                    <div class="sede-select-info">
+                                        <div class="sede-select-title"><i class="bi bi-geo-alt-fill"></i> MIRAFLORES</div>
+                                        <div class="sede-select-address">Av. Benavides 123, Miraflores</div>
+                                    </div>
+                                </div>
+                                <div class="sede-select-card" onclick="selectSede(this, 'Santa Anita', 2)">
+                                    <img src="/images/SANTA ANITA.jpg" alt="Sede Santa Anita" onerror="this.src='/images/Logo.png'">
+                                    <div class="sede-select-info">
+                                        <div class="sede-select-title"><i class="bi bi-geo-alt-fill"></i> SANTA ANITA</div>
+                                        <div class="sede-select-address">Mall Aventura, Santa Anita</div>
+                                    </div>
+                                </div>
+                                <div class="sede-select-card" onclick="selectSede(this, 'San Isidro', 3)">
+                                    <img src="/images/SAN ISIDRO.jpg" alt="Sede San Isidro" onerror="this.src='/images/Logo.png'">
+                                    <div class="sede-select-info">
+                                        <div class="sede-select-title"><i class="bi bi-geo-alt-fill"></i> SAN ISIDRO</div>
+                                        <div class="sede-select-address">Av. Camino Real, San Isidro</div>
+                                    </div>
+                                </div>
+                                <div class="sede-select-card" onclick="selectSede(this, 'Lince', 4)">
+                                    <img src="/images/LINCE.jpg" alt="Sede Lince" onerror="this.src='/images/Logo.png'">
+                                    <div class="sede-select-info">
+                                        <div class="sede-select-title"><i class="bi bi-geo-alt-fill"></i> LINCE</div>
+                                        <div class="sede-select-address">Av. Arenales 1890, Lince</div>
+                                    </div>
+                                </div>
+                                <div class="sede-select-card" onclick="selectSede(this, 'La Molina', 5)">
+                                    <img src="/images/MOLINA.jpg" alt="Sede La Molina" onerror="this.src='/images/Logo.png'">
+                                    <div class="sede-select-info">
+                                        <div class="sede-select-title"><i class="bi bi-geo-alt-fill"></i> LA MOLINA</div>
+                                        <div class="sede-select-address">Av. Flora Tristan 471</div>
+                                    </div>
+                                </div>
+                                <div class="sede-select-card" onclick="selectSede(this, 'San Miguel', 6)">
+                                    <img src="/images/SAN MIGUEL.jpg" alt="Sede San Miguel" onerror="this.src='/images/Logo.png'">
+                                    <div class="sede-select-info">
+                                        <div class="sede-select-title"><i class="bi bi-geo-alt-fill"></i> SAN MIGUEL</div>
+                                        <div class="sede-select-address">Plaza San Miguel</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="carousel-btn right" onclick="scrollCarousel(235)"><i class="bi bi-chevron-right"></i></button>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- FILA 4: OCASIÓN ESPECIAL -->
+                        <div class="section-label"><i class="bi bi-gift"></i> OCASIÓN ESPECIAL (Opcional)</div>
+                        <div class="options-row" id="ocasion-container">
+                            <div class="btn-selectable" onclick="selectOption(this, 'ocasion')">Cumpleaños</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'ocasion')">Aniversario</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'ocasion')">Reunión</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'ocasion')">Cita</div>
+                            <div class="btn-selectable" onclick="selectOption(this, 'ocasion')">Otro</div>
+                        </div>
+
+                        <!-- FILA 5: COMENTARIOS -->
+                        <div class="section-label"><i class="bi bi-chat-left-text"></i> COMENTARIOS (Opcional)</div>
+                        <textarea class="form-control dark-input w-100" rows="3" placeholder="Cuéntanos si hay algo que debamos saber..." id="comentariosReserva"></textarea>
+
+                        <!-- BOTÓN CONFIRMAR -->
+                        <button type="submit" id="btnConfirmarReserva" class="btn-confirmar">CONFIRMAR RESERVA</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. FOOTER -->
+    <div class="footer-subbar">
+        <div class="container">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <small class="text-secondary d-block mb-2">SÍGUENOS</small>
+                    <div class="d-flex justify-content-center justify-content-md-start gap-3 fs-5">
+                        <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <img src="/images/Logo.png" alt="Logo" width="40" height="40" class="rounded-circle mb-2" onerror="this.style.display='none'">
+                    <div class="fw-bold">SHIMAYA</div>
+                    <small class="text-danger d-block">RAMEN</small>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <small class="text-secondary d-block mb-1">ATENCIÓN AL CLIENTE</small>
+                    <small class="d-block text-light"><i class="bi bi-whatsapp text-success me-1"></i> 950 168 895</small>
+                    <small class="text-secondary"><i class="bi bi-envelope me-1"></i> ramen@shimaya.pe</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts de la Reserva -->
+    <script>
+        let reservaData = {
+            hora: '',
+            personas: '',
+            sede: '',
+            idSede: null,
+            ocasion: ''
+        };
+        let toastTimer = null;
+
+        function mostrarAvisoNoLogueado(subtitulo, descripcion) {
+            const toast = document.getElementById('toastNoLogueado');
+            toast.classList.add('show');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+
+            document.getElementById('modalNoLogueadoSubtitulo').textContent = subtitulo;
+            document.getElementById('modalNoLogueadoDesc').textContent = descripcion;
+
+            const modal = new bootstrap.Modal(document.getElementById('modalNoLogueado'));
+            modal.show();
+        }
+
+        function verificarAccesoCarrito(event) {
+            const estaLogueado = localStorage.getItem('usuarioLogueado') === 'true' && localStorage.getItem('usuarioEmail');
+            if (!estaLogueado) {
+                event.preventDefault();
+                mostrarAvisoNoLogueado(
+                    'No se puede abrir el carrito',
+                    'Debes iniciar sesión con tu cuenta antes de agregar productos o abrir el carrito.'
+                );
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Establecer la fecha mínima a HOY
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaReserva').setAttribute('min', hoy);
+
+            // Actualizar estado del ícono de usuario en la barra superior
+            const btnUsuario = document.getElementById('btnPerfilUsuario');
+            const textoUsuario = document.getElementById('textoUsuarioNav');
+            const estaLogueado = localStorage.getItem('usuarioLogueado') === 'true' && localStorage.getItem('usuarioEmail');
+            if (estaLogueado) {
+                btnUsuario.href = 'perfil.html';
+                btnUsuario.classList.remove('text-light');
+                btnUsuario.classList.add('text-danger');
+                const nombre = localStorage.getItem('usuarioNombre') || 'Mi Cuenta';
+                textoUsuario.textContent = nombre;
+            } else {
+                btnUsuario.href = 'login.html';
+                textoUsuario.textContent = 'Iniciar sesión';
+            }
+
+            // Actualizar contador del carrito en la barra superior
+            const items = JSON.parse(localStorage.getItem('carritoItems')) || [];
+            const totalUnidades = items.reduce((acc, it) => acc + (it.cantidad || 1), 0);
+            const badge = document.getElementById('badgeCarritoNav');
+            if (estaLogueado && totalUnidades > 0) {
+                badge.textContent = totalUnidades;
+                badge.style.display = 'inline-block';
+            }
+        });
+
+        function actualizarEstadoBoton() {
+            const fecha = document.getElementById('fechaReserva').value;
+            const btn = document.getElementById('btnConfirmarReserva');
+            if (fecha && reservaData.hora && reservaData.personas && reservaData.sede) {
+                btn.classList.add('listo');
+            } else {
+                btn.classList.remove('listo');
+            }
+        }
+
+        function selectOption(btn, tipo) {
+            const container = btn.parentElement;
+            const options = container.querySelectorAll('.btn-selectable');
+            
+            if (btn.classList.contains('active') && tipo === 'ocasion') {
+                btn.classList.remove('active');
+                reservaData[tipo] = '';
+                return;
+            }
+
+            options.forEach(opt => opt.classList.remove('active'));
+            btn.classList.add('active');
+            reservaData[tipo] = btn.textContent.trim();
+            actualizarEstadoBoton();
+        }
+
+        function selectSede(card, nombreSede, idSede) {
+            const container = document.getElementById('sedesCarousel');
+            const cards = container.querySelectorAll('.sede-select-card');
+            
+            cards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            
+            reservaData.sede = nombreSede;
+            reservaData.idSede = idSede;
+            actualizarEstadoBoton();
+        }
+
+        function scrollCarousel(amount) {
+            const carousel = document.getElementById('sedesCarousel');
+            carousel.scrollBy({
+                top: 0,
+                left: amount,
+                behavior: 'smooth'
+            });
+        }
+
+        function guardarReservaEnPerfil(nuevaReserva) {
+            const email = localStorage.getItem('usuarioEmail');
+            if (!email) return;
+
+            const key = email.toLowerCase().trim();
+            const db = JSON.parse(localStorage.getItem('shimaya_usuarios_db')) || {};
+            if (!db[key]) {
+                db[key] = {
+                    nombre: localStorage.getItem('usuarioNombre') || '',
+                    apellidos: localStorage.getItem('usuarioApellidos') || '',
+                    email: email,
+                    telefono: localStorage.getItem('usuarioTelefono') || '',
+                    foto: '',
+                    direcciones: [],
+                    pedidos: [],
+                    reservas: []
+                };
+            }
+            if (!db[key].reservas) db[key].reservas = [];
+
+            db[key].reservas.unshift(nuevaReserva);
+            localStorage.setItem('shimaya_usuarios_db', JSON.stringify(db));
+        }
+
+        async function enviarReserva(e) {
+            e.preventDefault();
+
+            const estaLogueado = localStorage.getItem('usuarioLogueado') === 'true';
+            const email = localStorage.getItem('usuarioEmail');
+
+            if (!estaLogueado || !email) {
+                mostrarAvisoNoLogueado(
+                    'No se puede registrar la reserva',
+                    'Debes iniciar sesión con tu cuenta antes de confirmar una reserva.'
+                );
+                return;
+            }
+
+            const fecha = document.getElementById('fechaReserva').value;
+            const comentarios = document.getElementById('comentariosReserva').value.trim();
+
+            if (!fecha) {
+                alert('Por favor, selecciona una fecha.');
+                return;
+            }
+            if (!reservaData.hora) {
+                alert('Por favor, selecciona la hora de tu reserva.');
+                return;
+            }
+            if (!reservaData.personas) {
+                alert('Por favor, indica la cantidad de personas.');
+                return;
+            }
+            if (!reservaData.sede) {
+                alert('Por favor, selecciona una sede para tu reserva.');
+                return;
+            }
+
+            const nuevaReserva = {
+                sede: reservaData.sede,
+                fecha: fecha,
+                hora: reservaData.hora,
+                personas: reservaData.personas,
+                ocasion: reservaData.ocasion || '',
+                comentarios: comentarios,
+                estado: 'CONFIRMADA'
+            };
+
+            // 1. Guardar en el perfil persistente del usuario para que aparezca en perfil.html
+            guardarReservaEnPerfil(nuevaReserva);
+
+            // 2. Enviar al backend en Spring Boot / MySQL (compatible con ReservaController)
+            const usuarioId = localStorage.getItem('usuarioId');
+            const numPersonasInt = parseInt(reservaData.personas.replace('+', ''), 10) || 2;
+            const payloadBackend = {
+                email: email,
+                idUsuario: usuarioId ? parseInt(usuarioId, 10) : null,
+                idSede: reservaData.idSede,
+                fechaReserva: fecha,
+                horaReserva: reservaData.hora + ':00',
+                numPersonas: numPersonasInt,
+                ocasionEspecial: reservaData.ocasion || 'Ninguna',
+                comentarios: comentarios || ''
+            };
+
+            try {
+                await fetch('http://localhost:8080/api/reservas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadBackend)
+                });
+            } catch (err) {
+                console.warn('Reserva registrada localmente:', err);
+            }
+
+            alert(`✅ ¡RESERVA CONFIRMADA!\n\nDetalles:\n- Sede: ${reservaData.sede}\n- Fecha: ${fecha}\n- Hora: ${reservaData.hora}\n- Personas: ${reservaData.personas}\n- Ocasión: ${reservaData.ocasion || 'Ninguna'}\n\nPuedes verla en tu sección "Mis reservas".`);
+            window.location.href = 'perfil.html';
+        }
+    </script>
+</body>
+</html>

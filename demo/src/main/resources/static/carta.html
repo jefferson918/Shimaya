@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimaya Ramen - Nuestra Carta</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #000000;
+            background-image: url('/images/FONDO.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden; 
+        }
+
+        /* Navbar Fijo */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 0;
+            position: fixed;
+            top: 0; left: 0; right: 0; z-index: 1000;
+        }
+        .nav-link { color: #d1d1d1 !important; font-weight: 500; font-size: 0.9rem; letter-spacing: 1px; }
+        .nav-link.active, .nav-link:hover { color: #e63946 !important; border-bottom: 2px solid #e63946; }
+
+        /* Cabecera */
+        .header-carta {
+            padding-top: 130px;
+            padding-bottom: 30px;
+            background: radial-gradient(circle at top center, rgba(168, 24, 34, 0.35) 0%, rgba(0, 0, 0, 0) 70%);
+            text-align: center;
+        }
+        .japanese-sub { color: #888888; font-size: 1.4rem; letter-spacing: 4px; margin-bottom: 5px; }
+        .title-carta { font-size: 3.5rem; font-weight: 700; margin-bottom: 15px; }
+        .title-carta span { color: #d32f2f; }
+        .desc-carta { color: #a0a0a0; max-width: 650px; margin: 0 auto 35px; font-size: 0.95rem; line-height: 1.6; }
+
+        /* Categorías */
+        .categories-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 50px; }
+        .category-btn {
+            background-color: rgba(20, 20, 20, 0.8);
+            color: #b0b0b0;
+            border: 1px solid #2a2a2a;
+            border-radius: 30px;
+            padding: 10px 22px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .category-btn.active, .category-btn:hover {
+            background-color: #d32f2f;
+            color: #ffffff;
+            border-color: #d32f2f;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        .ramen-svg-icon {
+            width: 22px; height: 22px; fill: none; stroke: currentColor;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle;
+        }
+
+        /* Títulos de Sección */
+        .category-header-title {
+            position: relative; display: inline-flex; align-items: center; gap: 10px;
+            font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-align: center;
+        }
+        .category-header-title::before, .category-header-title::after {
+            content: ''; position: absolute; top: 50%; width: 35px; height: 1px; background-color: #d32f2f;
+        }
+        .category-header-title::before { right: 100%; margin-right: 15px; }
+        .category-header-title::after { left: 100%; margin-left: 15px; }
+        
+        .category-subtext { color: #888888; font-size: 0.85rem; margin-top: 5px; margin-bottom: 25px; text-align: center; }
+
+        /* Leyenda de Tamaños */
+        .size-legend { display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 40px; user-select: none; flex-wrap: wrap; }
+        .size-legend-item { display: flex; align-items: center; gap: 10px; color: #a0a0a0; font-size: 0.88rem; }
+        .size-badge {
+            width: 36px; height: 36px; border-radius: 50%; background-color: #222222; color: #ffffff;
+            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;
+        }
+        .size-badge.wide { width: auto; padding: 0 14px; border-radius: 20px; }
+
+        /* Tarjeta de Producto */
+        .card-item {
+            background-color: #000000;
+            border: 1px solid #1f1f1f;
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(211, 47, 47, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .kanji-vertical {
+            position: absolute; top: 14px; left: 14px; writing-mode: vertical-rl; text-orientation: upright;
+            color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; letter-spacing: 1px; z-index: 5;
+            pointer-events: none; font-weight: 500; text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            max-height: 135px; overflow: hidden;
+        }
+
+        /* Tooltip flotante */
+        .tooltip-icon { position: relative; display: inline-block; cursor: pointer; margin-left: 4px; }
+        .tooltip-icon .tooltip-text {
+            visibility: hidden; width: 110px; background-color: #d32f2f; color: #ffffff; text-align: center;
+            border-radius: 6px; padding: 4px 6px; font-size: 0.72rem; font-weight: 600; text-transform: none;
+            letter-spacing: 0; position: absolute; z-index: 20; bottom: 125%; left: 50%; transform: translateX(-50%);
+            opacity: 0; transition: opacity 0.25s ease-in-out; pointer-events: none; box-shadow: 0px 4px 10px rgba(0,0,0,0.7);
+        }
+        .tooltip-icon .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #d32f2f transparent transparent transparent;
+        }
+        .tooltip-icon.veggie .tooltip-text { background-color: #2e7d32; }
+        .tooltip-icon.veggie .tooltip-text::after { border-color: #2e7d32 transparent transparent transparent; }
+        .tooltip-icon.cold .tooltip-text { background-color: #0288d1; }
+        .tooltip-icon.cold .tooltip-text::after { border-color: #0288d1 transparent transparent transparent; }
+        .tooltip-icon:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        /* Imagen */
+        .img-container { width: 100%; height: 160px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .img-container img { max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.8)); }
+
+        /* Textos */
+        .item-title {
+            font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; color: #ffffff;
+            margin-bottom: 6px; text-transform: uppercase; display: flex; align-items: center; flex-wrap: wrap;
+        }
+        .item-desc { font-size: 0.76rem; color: #999999; line-height: 1.4; margin-bottom: 15px; flex-grow: 1; }
+
+        /* Detalles de Precio y Tallas */
+        .card-details { border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 10px; margin-top: auto; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .price-label { font-size: 0.65rem; color: #888888; text-transform: uppercase; display: block; }
+        .item-price { color: #e63946; font-weight: 700; font-size: 0.95rem; }
+        .size-hint { font-size: 0.68rem; color: #666666; margin-bottom: 4px; }
+        
+        .card-sizes { display: flex; gap: 12px; font-size: 0.78rem; color: #666666; margin-bottom: 8px; flex-wrap: wrap; }
+        .card-size-opt { cursor: pointer; transition: all 0.2s; font-weight: 600; padding: 1px 4px; }
+        .card-size-opt:hover { color: #ffffff; }
+        .card-size-opt.active { color: #e63946; font-weight: 800; text-decoration: underline; }
+
+        /* Controles de Cantidad */
+        .qty-box { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #888888; }
+        .btn-qty { background: none; border: none; color: #e63946; font-size: 1.1rem; cursor: pointer; padding: 0; line-height: 1; transition: transform 0.15s ease; }
+        .btn-qty:hover { transform: scale(1.2); }
+        .qty-val { color: #ffffff; min-width: 14px; text-align: center; font-weight: 600; }
+
+        /* Botón Agregar */
+        .btn-agregar {
+            display: none; background-color: #c62828; color: #ffffff; border: none; border-radius: 8px;
+            width: 100%; padding: 8px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-agregar:hover { background-color: #b71c1c; transform: scale(1.02); }
+
+        .menu-section { display: none; }
+        .menu-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .footer-subbar { background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); border-top: 1px solid #111; padding: 25px 0; font-size: 0.8rem; margin-top: 80px; }
+
+        /* Notificación Flotante (Toast) */
+        .toast-carrito {
+            position: fixed; top: 90px; right: 20px; background-color: #198754; color: white;
+            padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; z-index: 2000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px;
+            transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-carrito.show { transform: translateX(0); }
+    </style>
+</head>
+<body>
+
+    <!-- 1. BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+                <img src="/images/Logo.png" width="50" height="50" class="rounded-circle me-3 shadow" alt="Logo Shimaya" style="object-fit: cover; border: 2px solid #e63946;">
+                <div>
+                    <div class="lh-1 fs-5 tracking-wider">SHIMAYA</div>
+                    <small class="text-danger fw-bold" style="font-size: 0.75rem; letter-spacing: 2px;">RAMEN</small>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="carta.html">CARTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reservas.html">RESERVAS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sedes.html">SEDES</a></li>
+                </ul>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <!-- Estado de sesión visible -->
+                <div id="estadoSesionNav" class="d-flex align-items-center gap-2">
+                    <a href="login.html" id="btnPerfilUsuario" class="text-light fs-4 text-decoration-none d-flex align-items-center gap-2" title="Iniciar sesión">
+                        <i class="bi bi-person-circle"></i>
+                        <span id="textoUsuarioNav" class="fs-6 fw-semibold">Iniciar sesión</span>
+                    </a>
+                    <button type="button" id="btnCerrarSesionNav" class="btn btn-outline-danger btn-sm py-0 px-2" style="display: none; font-size: 0.75rem;" onclick="cerrarSesionRapida()" title="Cerrar sesión">
+                        Salir
+                    </button>
+                </div>
+
+                <a href="carrito.html" onclick="irAlCarrito(event)" class="text-light fs-4 position-relative">
+                    <i class="bi bi-cart3"></i>
+                    <span id="badgeCarritoNav" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; display: none;">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. CABECERA -->
+    <section class="header-carta">
+        <div class="container">
+            <div class="japanese-sub">メニュー</div>
+            <h1 class="title-carta">Nuestra <span>Carta</span></h1>
+            <p class="desc-carta">
+                Descubre nuestra variedad de auténticos sabores japoneses, preparados con ingredientes frescos y de la mejor calidad.
+            </p>
+
+            <div class="categories-container">
+                <button class="category-btn active" onclick="mostrarSeccion('entradas', this)"><i class="bi bi-cup-hot-fill"></i> Entradas</button>
+                <button class="category-btn" onclick="mostrarSeccion('ramen', this)">
+                    <svg class="ramen-svg-icon" viewBox="0 0 24 24"><path d="M3 11h18a8 8 0 0 1-18 0z"/><path d="M8 19h8"/><path d="M7 11V7"/><path d="M10 11V6"/><path d="M13 11V7"/><path d="M16 11V6"/><path d="M5 4h15"/><path d="M5 2h14"/></svg> Ramen
+                </button>
+                <button class="category-btn" onclick="mostrarSeccion('fondos', this)"><i class="bi bi-disc"></i> Platos de Fondo</button>
+                <button class="category-btn" onclick="mostrarSeccion('makis', this)"><i class="bi bi-circle"></i> Makis</button>
+                <button class="category-btn" onclick="mostrarSeccion('promociones', this)"><i class="bi bi-percent"></i> Promociones</button>
+                <button class="category-btn" onclick="mostrarSeccion('bebidas', this)"><i class="bi bi-cup-straw"></i> Bebidas</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. CONTENIDO PRINCIPAL -->
+    <div class="container mb-5">
+        
+        <!-- SECCIÓN: ENTRADAS -->
+        <div id="sec-entradas" class="menu-section active">
+            <div class="text-center mb-4">
+                <div class="category-header-title">ENTRADAS</div>
+                <div class="category-subtext">El comienzo perfecto de tu experiencia</div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">味噌汁</div>
+                        <div class="img-container"><img src="/images/MISOSHIRU.png" alt="Misoshiru" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">MISOSHIRU</div>
+                        <div class="item-desc">Tradicional caldo japonés a base de miso acompañado de algas wakame y tofu en cubos.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 16.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MISOSHIRU', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">餃子</div>
+                        <div class="img-container"><img src="/images/GYOZAS.png" alt="Gyozas" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">GYOZAS</div>
+                        <div class="item-desc">Empanadas al vapor rellenas de chancho y langostino.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 18.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('GYOZAS', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">揚げ餃子</div>
+                        <div class="img-container"><img src="/images/AGE GYOZAS.png" alt="Age Gyozas" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">AGE GYOZAS</div>
+                        <div class="item-desc">Empanadas fritas rellenas de chancho y langostinos.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 18.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('AGE GYOZAS', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">サクサク鮭タコス</div>
+                        <div class="img-container"><img src="/images/SAKU SHAKE TACO.png" alt="Saku Shake Taco" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">SAKU SHAKE TACO</div>
+                        <div class="item-desc">Masa de Gyoza Crocante en forma de Taco relleno de lechuga en juliana y tartar de salmón.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 18.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('SAKU SHAKE TACO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">唐揚げ</div>
+                        <div class="img-container"><img src="/images/KARAAGE.png" alt="Karaage" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">KARAAGE</div>
+                        <div class="item-desc">Trozos de pollo crocante al estilo japonés.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 20.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('KARAAGE', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">焼き鳥</div>
+                        <div class="img-container"><img src="/images/YAKITORI.png" alt="Yakitori" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">YAKITORI</div>
+                        <div class="item-desc">Brochetas de pollo salado (Estilo Shimaya).</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 20.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('YAKITORI', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">海老フライ</div>
+                        <div class="img-container"><img src="/images/EBI FURAI.png" alt="Ebi Furai" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">EBI FURAI</div>
+                        <div class="item-desc">Langostinos fritos al panko.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 16.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('EBI FURAI', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">エビフィラ</div>
+                        <div class="img-container"><img src="/images/EBI PHILADELPHIA.png" alt="Ebi Philadelphia" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">EBI PHILADELPHIA</div>
+                        <div class="item-desc">Langostinos rellenos de queso philadelphia al panko.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 16.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('EBI PHILADELPHIA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: RAMEN -->
+        <div id="sec-ramen" class="menu-section">
+            <div class="text-center mb-3">
+                <div class="category-header-title">
+                    <svg class="ramen-svg-icon" style="width: 28px; height: 28px;" viewBox="0 0 24 24"><path d="M3 11h18a8 8 0 0 1-18 0z"/><path d="M8 19h8"/><path d="M7 11V7"/><path d="M10 11V6"/><path d="M13 11V7"/><path d="M16 11V6"/><path d="M5 4h15"/><path d="M5 2h14"/></svg>
+                    RAMEN
+                </div>
+                <div class="category-subtext">Tus sopas de mil sabores<br><span style="color:#d32f2f;">Elige tu tamaño</span></div>
+            </div>
+
+            <div class="size-legend">
+                <div class="size-legend-item"><span class="size-badge">S</span> Pequeño</div>
+                <div class="size-legend-item"><span class="size-badge">M</span> Mediano</div>
+                <div class="size-legend-item"><span class="size-badge">L</span> Grande</div>
+                <div class="size-legend-item"><span class="size-badge">XL</span> Extra - Grande</div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">海老ラーメン</div>
+                        <div class="img-container"><img src="/images/EBI RAMEN.png" alt="Ebi Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">EBI RAMEN</div>
+                        <div class="item-desc">Ramen de langostinos con cariñito peruano, acompañado con fideos y complementos.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 23.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 23.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 23.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 23.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 23.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('EBI RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">担々麺</div>
+                        <div class="img-container"><img src="/images/TANTA RAMEN.png" alt="Tantan Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">TANTAN RAMEN <span class="tooltip-icon"><span class="tooltip-text">Plato Picante</span>🌶️</span></div>
+                        <div class="item-desc">Ramen picante acompañado de verduras, huevo en su punto, chancho molido y complementos.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 21.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 21.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 21.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 21.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 21.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('TANTAN RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">チャーシュー麺</div>
+                        <div class="img-container"><img src="/images/CHASHU RAMEN.png" alt="Chashu Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CHASHU RAMEN</div>
+                        <div class="item-desc">Caldo a base de chancho, pollo y res, acompañado de abundantes láminas de cerdo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 22.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 22.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 22.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 22.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 22.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('CHASHU RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">野菜ラーメン</div>
+                        <div class="img-container"><img src="/images/VEGGIE RAMEN.png" alt="Veggie Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">VEGGIE RAMEN <span class="tooltip-icon veggie"><span class="tooltip-text">Vegetariano</span>🌱</span></div>
+                        <div class="item-desc">Caldo de especias orientales con Shitake, champiñones, espárragos, bambú y tofu frito.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 20.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 20.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('VEGGIE RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">醤油ラーメン</div>
+                        <div class="img-container"><img src="/images/SHOYU RAMEN.png" alt="Shoyu Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">SHOYU RAMEN</div>
+                        <div class="item-desc">Base de pollo y salsa de soya, acompañado de láminas de cerdo, verduras, y huevo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 20.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 20.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('SHOYU RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">豚骨ラーメン</div>
+                        <div class="img-container"><img src="/images/TONKOTSU RAMEN.png" alt="Tonkotsu Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">TONKOTSU RAMEN</div>
+                        <div class="item-desc">Caldo a base de chancho, pollo y res, acompañado de verduras y láminas de cerdo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 21.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 21.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 21.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 21.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 21.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('TONKOTSU RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">味噌ラーメン</div>
+                        <div class="img-container"><img src="/images/MISO RAMEN.png" alt="Miso Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">MISO RAMEN</div>
+                        <div class="item-desc">Caldo a base de pollo y pasta miso, acompañado de láminas de cerdo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 22.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 22.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 22.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 22.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 22.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MISO RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">塩ラーメン</div>
+                        <div class="img-container"><img src="/images/SHIO RAMEN.png" alt="Shio Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">SHIO RAMEN</div>
+                        <div class="item-desc">Caldo a base de pollo y esencias japonesas acompañado de láminas de cerdo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 20.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de tu ramen:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 20.00, 0)">S</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 3)">M</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 6)">L</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 20.00, 9)">XL</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('SHIO RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GUARNICIONES -->
+            <div class="text-center mb-4 mt-5">
+                <div class="category-header-title" style="font-size: 1.2rem;">GUARNICIONES</div>
+                <div class="category-subtext">Agrégale un ingrediente extra a tu ramen favorito</div>
+            </div>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">ご飯</div>
+                        <div class="img-container"><img src="/images/ARROZ.png" alt="Arroz" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">ARROZ</div>
+                        <div class="item-desc">Porción de arroz blanco con ajonjolí negro.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 6.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('ARROZ', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">麺</div>
+                        <div class="img-container"><img src="/images/FIDEO UDON.png" alt="Fideo Ramen" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">FIDEO RAMEN</div>
+                        <div class="item-desc">Porción de fideo usado en tu ramen favorito.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 6.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('FIDEO RAMEN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">サラダ</div>
+                        <div class="img-container"><img src="/images/ENSALADA.png" alt="Ensalada" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">ENSALADA</div>
+                        <div class="item-desc">Porción de ensalada de col con zanahoria.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 6.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('ENSALADA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">うどん</div>
+                        <div class="img-container"><img src="/images/FIDEO UDON.png" alt="Fideo Udon" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">FIDEO UDON</div>
+                        <div class="item-desc">Porción de fideo grueso estilo Udon.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 6.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('FIDEO UDON', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">叉焼</div>
+                        <div class="img-container"><img src="/images/CHASU.png" alt="Chasu" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CHASU</div>
+                        <div class="item-desc">Porción de cerdo marinado.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 6.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('CHASU', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">豆腐</div>
+                        <div class="img-container"><img src="/images/TOFU NATURAL.png" alt="Tofu Natural" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">TOFU NATURAL</div>
+                        <div class="item-desc">Porción de tofu blanco común.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 7.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('TOFU NATURAL', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">厚揚げ</div>
+                        <div class="img-container"><img src="/images/TOFU FRITO.png" alt="Tofu Frito" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">TOFU FRITO</div>
+                        <div class="item-desc">Porción de tofu blanco frito.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 7.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('TOFU FRITO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">玉子</div>
+                        <div class="img-container"><img src="/images/HUEVO.png" alt="Huevo" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">HUEVO</div>
+                        <div class="item-desc">Porción de huevo hervido.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 3.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('HUEVO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADICIONALES -->
+            <div class="text-center mb-4 mt-5">
+                <div class="category-header-title" style="font-size: 1.2rem;">ADICIONALES</div>
+                <div class="category-subtext">Carnes adicionales para tu ramen</div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">海老</div>
+                        <div class="img-container"><img src="/images/EBI FURAI.png" alt="Ebi" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">EBI</div>
+                        <div class="item-desc">Porción de ebi.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 3.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('EBI', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">豚肉</div>
+                        <div class="img-container"><img src="/images/CHASU.png" alt="Cerdo" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CERDO</div>
+                        <div class="item-desc">Porción de cerdo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 5.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('CERDO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">鶏肉</div>
+                        <div class="img-container"><img src="/images/KARAAGE.png" alt="Pollo" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">POLLO</div>
+                        <div class="item-desc">Porción de pollo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 5.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('POLLO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">牛肉</div>
+                        <div class="img-container"><img src="/images/CHASU.png" alt="Lomo" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">LOMO</div>
+                        <div class="item-desc">Porción de lomo.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 7.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('LOMO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: PLATOS DE FONDO -->
+        <div id="sec-fondos" class="menu-section">
+            <div class="text-center mb-4">
+                <div class="category-header-title">PLATOS DE FONDO</div>
+                <div class="category-subtext">El comienzo perfecto de tu experiencia</div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">辛飯</div>
+                        <div class="img-container"><img src="/images/KARAMESHI.png" alt="Karameshi" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">KARAMESHI <span class="tooltip-icon"><span class="tooltip-text">Plato Picante</span>🌶️</span></div>
+                        <div class="item-desc">Arroz frito con huevo, pollo, y verduras en salsa picante de la casa.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 26.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('KARAMESHI', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">春雨</div>
+                        <div class="img-container"><img src="/images/HARUSAME IRICHA.png" alt="Harusame Iricha" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">HARUSAME IRICHA</div>
+                        <div class="item-desc">Fideos de arroz salteado con pollo, shitake, holantao y zanahoria.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 27.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('HARUSAME IRICHA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">照焼き</div>
+                        <div class="img-container"><img src="/images/CHICKEN TERIYAKI.png" alt="Chicken Teriyaki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CHICKEN TERIYAKI</div>
+                        <div class="item-desc">Trozos de pollo guisados en salsa Teriyaki dulce.<br><small class="text-secondary">*Incluye arroz blanco</small></div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 27.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('CHICKEN TERIYAKI', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">海老丼</div>
+                        <div class="img-container"><img src="/images/EBIDON.png" alt="Ebidon" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">EBIDON</div>
+                        <div class="item-desc">Langostinos al panko con cebolla blanca guisada con huevo batido.<br><small class="text-secondary">*Incluye arroz blanco</small></div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 31.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('EBIDON', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">鮭ポキ</div>
+                        <div class="img-container"><img src="/images/POKE SALMON.png" alt="Poke Salmon" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">POKE SALMON <span class="tooltip-icon cold"><span class="tooltip-text">Plato Frío</span>🥗</span></div>
+                        <div class="item-desc">Plato de verduras picadas acompañado de salmón macerado en salsa.<br><small class="text-secondary">*Incluye arroz blanco</small></div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 30.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('POKE SALMON', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">炒飯</div>
+                        <div class="img-container"><img src="/images/CHAUFA SHIMAYA.png" alt="Chaufa Shimaya" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CHAUFA SHIMAYA</div>
+                        <div class="item-desc">Chaufa con champiñones, frejol chino y chancho glaseado. Coronado con wantan frito.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 28.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('CHAUFA SHIMAYA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">カツカレー</div>
+                        <div class="img-container"><img src="/images/KATSU KARE.png" alt="Katsu Kare" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">KATSU KARE</div>
+                        <div class="item-desc">Bife de cerdo al panko bañado en curry japonés.<br><small class="text-secondary">*Incluye arroz blanco</small></div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 30.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('KATSU KARE', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">オムライス</div>
+                        <div class="img-container"><img src="/images/OMURAISU.png" alt="Omuraisu" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">OMURAISU</div>
+                        <div class="item-desc">Pollo, holantao, zanahoria, salteados con arroz y salsa katsu en tortilla.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 27.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('OMURAISU', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: MAKIS -->
+        <div id="sec-makis" class="menu-section">
+            <div class="text-center mb-3">
+                <div class="category-header-title">MAKIS</div>
+                <div class="category-subtext">Tus rolls de mil sabores<br><span style="color:#d32f2f;">Elige tu tamaño</span></div>
+            </div>
+
+            <div class="size-legend">
+                <div class="size-legend-item"><span class="size-badge wide">1/2 Tabla</span> 6 piezas</div>
+                <div class="size-legend-item"><span class="size-badge wide">1 Tabla</span> 12 piezas</div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">野菜巻き</div>
+                        <div class="img-container"><img src="/images/VEGGIE.png" alt="Veggie Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">VEGGIE <span class="tooltip-icon veggie"><span class="tooltip-text">Vegetariano</span>🌱</span></div>
+                        <div class="item-desc">Relleno de kiuri, zanahoria y beterraga. Envuelto en nori con salsa ponzu.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige la cantidad de tus makis:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI VEGGIE', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">スパイシーロール</div>
+                        <div class="img-container"><img src="/images/SPICY.png" alt="Spicy Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">SPICY <span class="tooltip-icon"><span class="tooltip-text">Plato Picante</span>🌶️</span></div>
+                        <div class="item-desc">Relleno de palta y langostinos. Cubierto de salmón y una salsa picante.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige la cantidad de tus makis:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI SPICY', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">カリフォルニアロール</div>
+                        <div class="img-container"><img src="/images/CALIFORNIA.png" alt="California Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CALIFORNIA</div>
+                        <div class="item-desc">Langostino al panko, palta y queso crema de relleno.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la tabla:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI CALIFORNIA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">アセビチャード巻き</div>
+                        <div class="img-container"><img src="/images/ACEVICHADO.png" alt="Acevichado Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">ACEVICHADO</div>
+                        <div class="item-desc">Langostino al panko y palta de relleno, cubierto con salsa acevichada.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige la cantidad de tus makis:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI ACEVICHADO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">誘惑巻き</div>
+                        <div class="img-container"><img src="/images/YUWAKU.png" alt="Yuwaku Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">YUWAKU</div>
+                        <div class="item-desc">Relleno de salmón, pescado blanco, queso crema. Cubierto de plátano maduro.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la tabla:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI YUWAKU', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">にんにく巻き</div>
+                        <div class="img-container"><img src="/images/NIN NIKU.png" alt="Nin Niku Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">NIN NIKU</div>
+                        <div class="item-desc">Langostino y palta, cubierto con pescado, flameado con salsa de ajos parrillera.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige la cantidad de tus makis:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI NIN NIKU', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">黒い巻き</div>
+                        <div class="img-container"><img src="/images/KUROI.png" alt="Kuroi Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">KUROI</div>
+                        <div class="item-desc">Relleno de palta y langostinos. Cubierto con atún y salsa de ostión.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la tabla:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI KUROI', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">インカ巻き</div>
+                        <div class="img-container"><img src="/images/INKA.png" alt="Inka Maki" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">INKA</div>
+                        <div class="item-desc">Relleno de queso crema, palta y trucha ahumada. Toques de ajonjolí.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 14.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la tabla:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 14.00, 0)">1/2 Tabla</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 14.00, 14.00)">1 Tabla</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MAKI INKA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: PROMOCIONES -->
+        <div id="sec-promociones" class="menu-section">
+            <div class="text-center mb-4">
+                <div class="category-header-title">PROMOCIONES</div>
+                <div class="category-subtext">Combos especiales para compartir o disfrutar al máximo</div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">お得セット</div>
+                        <div class="img-container"><img src="/images/CHASHU RAMEN.png" alt="Dúo Ramen Shimaya" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">DÚO RAMEN SHIMAYA</div>
+                        <div class="item-desc">2 Ramen medianos a elección + 1 porción de Gyozas al vapor.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 54.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('DÚO RAMEN SHIMAYA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">寿司コンボ</div>
+                        <div class="img-container"><img src="/images/ACEVICHADO.png" alt="Combo Maki Lover" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">COMBO MAKI LOVER</div>
+                        <div class="item-desc">2 Tablas de Makis (24 piezas) + 2 bebidas japonesas a elección.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 49.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('COMBO MAKI LOVER', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: BEBIDAS -->
+        <div id="sec-bebidas" class="menu-section">
+            <div class="text-center mb-3">
+                <div class="category-header-title">BEBIDAS</div>
+                <div class="category-subtext">Tus bebidas de mil sabores</div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">お茶</div>
+                        <div class="img-container"><img src="/images/OCHA.png" alt="Ocha" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">OCHA</div>
+                        <div class="item-desc">Té verde japonés.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 5.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la bebida:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 5.00, 0)">Taza</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 5.00, 5.00)">Jarra</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('OCHA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">抹茶</div>
+                        <div class="img-container"><img src="/images/MATCHA.png" alt="Matcha" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">MATCHA</div>
+                        <div class="item-desc">Polvo de té verde japonés.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 8.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la bebida:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 8.00, 0)">Taza</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 8.00, 6.00)">Jarra</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MATCHA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">麦茶</div>
+                        <div class="img-container"><img src="/images/MUGICHA.png" alt="Mugicha" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">MUGICHA</div>
+                        <div class="item-desc">Cebada tostada japonesa.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 7.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la bebida:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 7.00, 0)">Taza</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 7.00, 5.00)">Jarra</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('MUGICHA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">ジャスミン茶</div>
+                        <div class="img-container"><img src="/images/TE DE JAZMIN.png" alt="Té de Jasmín" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">TÉ DE JASMÍN</div>
+                        <div class="item-desc">Infusión japonesa.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 5.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige el tamaño de la bebida:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 5.00, 0)">Taza</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 5.00, 5.00)">Jarra</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('TÉ DE JASMÍN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-4 mt-5">
+                <div class="category-header-title" style="font-size: 1.2rem;">BEBIDAS JAPONESAS</div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">オリオンビール</div>
+                        <div class="img-container"><img src="/images/CERVEZA ORION.png" alt="Cerveza Orion" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CERVEZA ORION</div>
+                        <div class="item-desc">Cerveza japonesa clásica, ligera y de sabor seco.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 19.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('CERVEZA ORION', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">サッポロビール</div>
+                        <div class="img-container"><img src="/images/CERVEZA SAPPORO.png" alt="Cerveza Sapporo" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">CERVEZA SAPPORO</div>
+                        <div class="item-desc">Cerveza tropical japonesa, suave y muy refrescante.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 19.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('CERVEZA SAPPORO', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">日本酒</div>
+                        <div class="img-container"><img src="/images/SAKE.png" alt="Sake" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">SAKE</div>
+                        <div class="item-desc">Licor de arroz japonés.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 25.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('SAKE', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="kanji-vertical">ラムネ</div>
+                        <div class="img-container"><img src="/images/RAMUNE.png" alt="Ramune" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">RAMUNE</div>
+                        <div class="item-desc">Gaseosa japonesa de sabores.<br><small class="text-secondary">*Sin alcohol</small></div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 15.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('RAMUNE', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-4 mt-5">
+                <div class="category-header-title" style="font-size: 1.2rem;">BEBIDAS EMBOTELLADAS</div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="img-container"><img src="/images/ALOE.png" alt="Aloe Vera" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">ALOE</div>
+                        <div class="item-desc">Bebida refrescante de sábila.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 9.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('ALOE', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="img-container"><img src="/images/TE CON LIMON.png" alt="Té con Limón" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">TÉ CON LIMÓN</div>
+                        <div class="item-desc">Bebida de té embotellado helado.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <span class="item-price">S/ 9.00</span>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('TÉ CON LIMÓN', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card-item">
+                        <div class="img-container"><img src="/images/INKA COLA.png" alt="Inka Cola" onerror="this.src='/images/Logo.png'"></div>
+                        <div class="item-title">INKA COLA</div>
+                        <div class="item-desc">La bebida de sabor nacional.</div>
+                        <div class="card-details">
+                            <div class="price-row">
+                                <div><span class="price-label">DESDE</span><span class="item-price">S/ 7.00</span></div>
+                                <div class="qty-box">
+                                    <button class="btn-qty" onclick="cambiarCant(this, -1)"><i class="bi bi-dash-circle"></i></button>
+                                    <span>Cant : <span class="qty-val">0</span></span>
+                                    <button class="btn-qty" onclick="cambiarCant(this, 1)"><i class="bi bi-plus-circle-fill"></i></button>
+                                </div>
+                            </div>
+                            <div class="size-hint">Elige la presentación:</div>
+                            <div class="card-sizes">
+                                <span class="card-size-opt active" onclick="cambiarTamano(this, 7.00, 0)">Mediano</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 7.00, 5.00)">1 Litro</span>
+                                <span class="card-size-opt" onclick="cambiarTamano(this, 7.00, 10.00)">1.5 Litros</span>
+                            </div>
+                            <button class="btn-agregar" onclick="agregarAlCarrito('INKA COLA', this)"><i class="bi bi-cart-fill me-1"></i> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- Fin del contenedor principal -->
+
+    <!-- Notificación Flotante (Toast) -->
+    <div id="toastCarrito" class="toast-carrito">
+        <i id="toastIcon" class="bi bi-check-circle-fill fs-5"></i>
+        <span id="toastMsg">Producto agregado</span>
+    </div>
+
+    <!-- MODAL DE BLOQUEO SI NO HAY NADIE LOGUEADO -->
+    <div class="modal fade" id="modalAuthCarrito" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-light" style="background-color: #141414; border: 2px solid #d32f2f; border-radius: 16px;">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-danger">
+                        <i class="bi bi-lock-fill me-2"></i>No hay nadie logueado
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="bi bi-person-x-fill text-danger mb-3 d-block" style="font-size: 3rem;"></i>
+                    <p class="mb-2 fw-bold fs-5">No se puede agregar al carrito</p>
+                    <p class="text-secondary mb-0">Debes iniciar sesión con tu cuenta antes de agregar productos o abrir el carrito.</p>
+                </div>
+                <div class="modal-footer border-top border-secondary d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cerrar</button>
+                    <a href="login.html" class="btn btn-danger px-4 fw-bold">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. SUB-FOOTER REDES -->
+    <div class="footer-subbar">
+        <div class="container">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <small class="text-secondary d-block mb-2">SÍGUENOS</small>
+                    <div class="d-flex justify-content-center justify-content-md-start gap-3 fs-5">
+                        <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <div class="fw-bold">SHIMAYA</div>
+                    <small class="text-danger d-block">RAMEN</small>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <small class="text-secondary d-block mb-1">ATENCIÓN AL CLIENTE</small>
+                    <small class="d-block text-light"><i class="bi bi-whatsapp me-1 text-success"></i> 950 168 895</small>
+                    <small class="text-secondary">ramen@shimaya.pe</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPTS DE LÓGICA DE CARRITO Y SESIÓN ESTRICTA -->
+    <script>
+        // Soporta tanto usuarioLogueado='true' + usuarioNombre, como JSON.stringify(usuario)
+        function obtenerUsuarioActivo() {
+            const raw = localStorage.getItem('usuarioLogueado');
+            if (!raw || raw === 'false' || raw === 'null' || raw === 'undefined') {
+                return null;
+            }
+
+            if (raw === 'true') {
+                const nombre = localStorage.getItem('usuarioNombre');
+                if (nombre && nombre.trim() !== '' && nombre !== 'null' && nombre !== 'undefined') {
+                    return { nombre: nombre.trim() };
+                }
+                return null;
+            }
+
+            try {
+                const obj = JSON.parse(raw);
+                if (obj && typeof obj === 'object' && (obj.nombre || obj.email)) {
+                    return { nombre: obj.nombre || obj.email };
+                }
+            } catch (e) {
+                return null;
+            }
+
+            return null;
+        }
+
+        function hayUsuarioLogueado() {
+            return obtenerUsuarioActivo() !== null;
+        }
+
+        function cerrarSesionRapida() {
+            localStorage.removeItem('usuarioLogueado');
+            localStorage.removeItem('usuarioNombre');
+            localStorage.removeItem('usuarioEmail');
+            localStorage.removeItem('usuarioTelefono');
+            localStorage.removeItem('carritoItems');
+            localStorage.removeItem('carritoPedidos');
+            sessionStorage.removeItem('modoInvitado');
+            window.location.reload();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const btnUsuario = document.getElementById('btnPerfilUsuario');
+            const textoUsuario = document.getElementById('textoUsuarioNav');
+            const btnCerrar = document.getElementById('btnCerrarSesionNav');
+            
+            sessionStorage.removeItem('modoInvitado');
+
+            const usuario = obtenerUsuarioActivo();
+
+            if (usuario) {
+                btnUsuario.href = 'perfil.html';
+                btnUsuario.classList.remove('text-light');
+                btnUsuario.classList.add('text-danger');
+                btnUsuario.title = 'Ir a mi perfil';
+                textoUsuario.textContent = usuario.nombre.split(' ')[0];
+                btnCerrar.style.display = 'inline-block';
+            } else {
+                // Limpieza total si no hay sesión válida
+                localStorage.removeItem('usuarioLogueado');
+                localStorage.removeItem('usuarioNombre');
+                localStorage.removeItem('usuarioEmail');
+                localStorage.removeItem('carritoItems');
+
+                btnUsuario.href = 'login.html';
+                btnUsuario.classList.remove('text-danger');
+                btnUsuario.classList.add('text-light');
+                btnUsuario.title = 'Iniciar sesión';
+                textoUsuario.textContent = 'Iniciar sesión';
+                btnCerrar.style.display = 'none';
+            }
+
+            actualizarBadgeCarrito();
+        });
+
+        function irAlCarrito(event) {
+            if (!hayUsuarioLogueado()) {
+                event.preventDefault();
+                mostrarToast("Error: No hay nadie logueado. Inicia sesión primero.", true);
+                const modal = new bootstrap.Modal(document.getElementById('modalAuthCarrito'));
+                modal.show();
+            }
+        }
+
+        function cambiarCant(btn, delta) {
+            const card = btn.closest('.card-item');
+            const qtySpan = card.querySelector('.qty-val');
+            const btnAgregar = card.querySelector('.btn-agregar');
+            
+            if (qtySpan) {
+                let actual = parseInt(qtySpan.textContent);
+                actual += delta;
+                if (actual < 0) actual = 0;
+                qtySpan.textContent = actual;
+
+                if (btnAgregar) {
+                    btnAgregar.style.display = actual > 0 ? 'block' : 'none';
+                }
+            }
+        }
+
+        function cambiarTamano(btnOpt, precioBase, incremento) {
+            const cardDetails = btnOpt.closest('.card-details');
+            const priceSpan = cardDetails.querySelector('.item-price');
+            
+            cardDetails.querySelectorAll('.card-size-opt').forEach(opt => opt.classList.remove('active'));
+            btnOpt.classList.add('active');
+
+            const nuevoPrecio = (precioBase + incremento).toFixed(2);
+            priceSpan.textContent = `S/ ${nuevoPrecio}`;
+        }
+
+        function agregarAlCarrito(nombrePlato, btn) {
+            // Bloqueo estricto: si no hay sesión iniciada, NO guarda ni suma nada
+            if (!hayUsuarioLogueado()) {
+                mostrarToast("Error: No hay nadie logueado. Inicia sesión primero.", true);
+                const modal = new bootstrap.Modal(document.getElementById('modalAuthCarrito'));
+                modal.show();
+                return;
+            }
+
+            const card = btn.closest('.card-item');
+            const cantidad = parseInt(card.querySelector('.qty-val').textContent);
+            if (cantidad <= 0) return;
+
+            const precioTexto = card.querySelector('.item-price').textContent;
+            const precioNum = parseFloat(precioTexto.replace('S/', '').trim());
+            const imagen = card.querySelector('img').src;
+
+            let variante = '';
+            const sizeOpts = card.querySelectorAll('.card-size-opt');
+            if (sizeOpts.length > 0) {
+                const activeOpt = card.querySelector('.card-size-opt.active');
+                if (activeOpt) {
+                    variante = activeOpt.textContent;
+                }
+            }
+            
+            const productoNuevo = {
+                nombre: nombrePlato,
+                precio: precioNum,
+                cantidad: cantidad,
+                variante: variante,
+                imagen: imagen
+            };
+
+            let carritoShimaya = JSON.parse(localStorage.getItem('carritoItems')) || [];
+            const indexExistente = carritoShimaya.findIndex(p => p.nombre === nombrePlato && p.variante === variante);
+            
+            if (indexExistente > -1) {
+                carritoShimaya[indexExistente].cantidad += cantidad;
+            } else {
+                carritoShimaya.push(productoNuevo);
+            }
+
+            localStorage.setItem('carritoItems', JSON.stringify(carritoShimaya));
+            actualizarBadgeCarrito();
+
+            card.querySelector('.qty-val').textContent = '0';
+            btn.style.display = 'none';
+
+            let textoVariante = variante ? ` [${variante}]` : '';
+            mostrarToast(`Agregaste ${cantidad}x ${nombrePlato}${textoVariante}`, false);
+        }
+
+        function actualizarBadgeCarrito() {
+            const badge = document.getElementById('badgeCarritoNav');
+            if (!hayUsuarioLogueado()) {
+                badge.style.display = 'none';
+                return;
+            }
+            let carritoShimaya = JSON.parse(localStorage.getItem('carritoItems')) || [];
+            let totalProductos = carritoShimaya.reduce((suma, prod) => suma + prod.cantidad, 0);
+            
+            if (totalProductos > 0) {
+                badge.textContent = totalProductos;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        let toastTimeout;
+        function mostrarToast(mensaje, esError = false) {
+            const toast = document.getElementById('toastCarrito');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toast.style.backgroundColor = esError ? '#dc3545' : '#198754';
+            toastIcon.className = esError ? 'bi bi-exclamation-octagon-fill fs-5' : 'bi bi-check-circle-fill fs-5';
+            toastMsg.textContent = mensaje;
+            toast.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        function mostrarSeccion(seccionId, btn) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.querySelectorAll('.menu-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            let seccion = document.getElementById('sec-' + seccionId);
+            if (seccion) {
+                seccion.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

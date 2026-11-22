@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta - Shimaya Ramen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #070707;
+            background-image: radial-gradient(circle at 12% 18%, rgba(180, 20, 30, 0.14) 0%, transparent 40%),
+                              radial-gradient(circle at 88% 82%, rgba(140, 15, 25, 0.10) 0%, transparent 45%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background-color: #050505;
+            border-bottom: 1px solid #1f1f1f;
+            padding: 12px 0;
+        }
+        .nav-link {
+            color: #d4d4d4 !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.8px;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #e63946 !important;
+        }
+        .btn-icon-user {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(230, 57, 70, 0.18);
+            border: 1px solid #e63946;
+            color: #e63946;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .main-wrapper {
+            flex: 1;
+        }
+        .sidebar-column {
+            border-right: 1px solid #1f1f1f;
+        }
+        @media (max-width: 991px) {
+            .sidebar-column {
+                border-right: none;
+                border-bottom: 1px solid #1f1f1f;
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        .titulo-cuenta {
+            font-weight: 800;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+            margin-bottom: 28px;
+        }
+        .titulo-cuenta::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 48px;
+            height: 3px;
+            background-color: #d32f2f;
+            border-radius: 2px;
+        }
+
+        .panel-card {
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .sidebar-btn {
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            border: 1px solid transparent;
+            color: #b0b0b0;
+            padding: 13px 16px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar-btn i {
+            font-size: 1.2rem;
+        }
+        .sidebar-btn:hover {
+            background-color: #1b1b1b;
+            color: #ffffff;
+        }
+        .sidebar-btn.active {
+            background: linear-gradient(90deg, rgba(211, 47, 47, 0.24) 0%, rgba(211, 47, 47, 0.06) 100%);
+            border-color: rgba(211, 47, 47, 0.55);
+            color: #ff5252;
+            font-weight: 600;
+        }
+
+        .btn-cerrar-sesion {
+            background-color: #6b141a;
+            border: 1px solid #8e1b22;
+            color: #ffffff;
+            padding: 9px 26px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-cerrar-sesion:hover {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+            color: #fff;
+        }
+
+        /* TARJETAS RESUMEN PERFIL */
+        .avatar-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #e63946, #8b0000);
+            border: 2px solid #ff5252;
+            color: #ffffff;
+            font-size: 1.35rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .btn-card-outline {
+            background-color: #1b1b1b;
+            border: 1px solid #333333;
+            color: #d4d4d4;
+            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .btn-card-outline:hover {
+            border-color: #e63946;
+            color: #ffffff;
+        }
+
+        .btn-ver-detalle {
+            background-color: rgba(211, 47, 47, 0.12);
+            border: 1px solid #b71c1c;
+            color: #ff5252;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .btn-ver-detalle:hover {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+            color: #ffffff;
+        }
+
+        .btn-circle-arrow {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #252525;
+            border: 1px solid #3a3a3a;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-circle-arrow:hover {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+
+        .btn-shimaya-red {
+            background-color: #d32f2f;
+            border: none;
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 7px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-shimaya-red:hover {
+            background-color: #b71c1c;
+            color: #ffffff;
+        }
+
+        .link-ver-todos {
+            color: #e63946;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        .link-ver-todos:hover {
+            color: #ff6b6b;
+        }
+
+        .reserva-preview-box {
+            background-color: #1b1b1b;
+            border: 1px solid #2b2b2b;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .reserva-thumb {
+            width: 96px;
+            height: 68px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #333;
+            flex-shrink: 0;
+            background-color: #242424;
+        }
+        .reserva-thumb-fallback {
+            width: 96px;
+            height: 68px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: linear-gradient(135deg, #251517, #161616);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e63946;
+            flex-shrink: 0;
+        }
+
+        .badge-count {
+            background-color: #d32f2f;
+            color: #fff;
+            font-size: 0.72rem;
+            padding: 2px 7px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
+        /* BADGES DE ESTADO */
+        .badge-estado-confirmada {
+            background-color: rgba(25, 135, 84, 0.25);
+            border: 1px solid #2ea043;
+            color: #4ade80;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+        .badge-estado-proceso {
+            background-color: rgba(161, 98, 7, 0.28);
+            border: 1px solid #a16207;
+            color: #facc15;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+        .badge-estado-cancelada {
+            background-color: rgba(211, 47, 47, 0.22);
+            border: 1px solid #e63946;
+            color: #ff6b6b;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        /* TITULOS SECCIONES */
+        .titulo-seccion-roja {
+            color: #e63946;
+            font-weight: 800;
+            font-size: 1.85rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        /* BUSCADOR CON ICONO */
+        .search-input-wrapper {
+            position: relative;
+        }
+        .search-input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #e63946;
+            font-size: 0.85rem;
+        }
+        .search-input-wrapper input {
+            padding-left: 34px !important;
+        }
+
+        /* TABLA HISTORIAL (PEDIDOS Y RESERVAS) */
+        .tabla-historial {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+        }
+        .tabla-historial thead th {
+            color: #d4d4d4;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 12px 10px;
+            border-bottom: 1px solid #2a2a2a;
+            text-align: center;
+        }
+        .tabla-historial tbody tr {
+            border-bottom: 1px solid #222222;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        .tabla-historial tbody tr:hover {
+            background-color: #1c1c1c;
+        }
+        .tabla-historial tbody tr.fila-seleccionada {
+            background-color: rgba(211, 47, 47, 0.14);
+        }
+        .tabla-historial tbody td {
+            padding: 15px 10px;
+            text-align: center;
+            color: #e5e5e5;
+            vertical-align: middle;
+        }
+
+        .btn-exportar-pdf {
+            background-color: #1f1f1f;
+            border: 1px solid #8e1b22;
+            color: #ffffff;
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        .btn-exportar-pdf:hover {
+            border-color: #e63946;
+            background-color: #2f1417;
+        }
+
+        .page-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid #2f2f2f;
+            background-color: #1a1a1a;
+            color: #d4d4d4;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .page-btn.active {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* RESERVA ACTUAL + PANEL DETALLE */
+        .card-reserva-actual {
+            position: relative;
+            background-color: #121212;
+            border: 1px solid #b71c1c;
+            border-radius: 14px;
+            padding: 28px 18px 18px 18px;
+            margin-top: 14px;
+        }
+        .ribbon-reserva-actual {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background-color: #d32f2f;
+            color: #ffffff;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .panel-detalle-reserva {
+            background-color: #121212;
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            padding: 24px;
+            height: 100%;
+        }
+        .detalle-sede-banner {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #2d2d2d;
+            margin-bottom: 16px;
+        }
+        .detalle-item-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .detalle-item-icon {
+            width: 24px;
+            color: #9ca3af;
+            font-size: 1.05rem;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .detalle-item-label {
+            width: 115px;
+            color: #e5e5e5;
+            font-weight: 600;
+            font-size: 0.86rem;
+            flex-shrink: 0;
+        }
+        .detalle-item-value {
+            color: #b5b5b5;
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+
+        .info-importante-titulo {
+            color: #eab308;
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .info-importante-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #b5b5b5;
+            font-size: 0.82rem;
+            margin-bottom: 10px;
+        }
+
+        .confirmacion-cancelar-box {
+            background-color: rgba(211, 47, 47, 0.14);
+            border: 1px solid rgba(230, 57, 70, 0.6);
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 16px;
+        }
+        .mensaje-cancelado-box {
+            background-color: rgba(25, 135, 84, 0.15);
+            border: 1px solid rgba(46, 160, 67, 0.6);
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 16px;
+        }
+
+        /* FOOTER */
+        .footer-shimaya {
+            background-color: #050505;
+            border-top: 1px solid #1c1c1c;
+            padding: 36px 0 28px 0;
+            margin-top: 60px;
+        }
+        .social-icon-link {
+            color: #ffffff;
+            font-size: 1.55rem;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+        .social-icon-link:hover {
+            color: #e63946;
+        }
+
+        /* MODALES */
+        .modal-content {
+            background-color: #141414;
+            border: 1px solid #2e2e2e;
+            border-radius: 14px;
+            color: #fff;
+        }
+        .form-control, .form-select {
+            background-color: #1c1c1c !important;
+            border-color: #333 !important;
+            color: #fff !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #e63946 !important;
+            box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.2) !important;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(35%) sepia(85%) saturate(2500%) hue-rotate(340deg);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR CON LOGO OFICIAL -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+                <img src="/images/Logo.png" width="55" height="55" class="rounded-circle me-3 shadow" alt="Logo Shimaya" style="object-fit: cover; border: 2px solid #e63946;">
+                <div class="lh-1">
+                    <div class="fs-5 tracking-wider">SHIMAYA</div>
+                    <small class="text-danger fw-bold" style="font-size: 0.75rem; letter-spacing: 2px;">RAMEN</small>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navMenu">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carta.html">CARTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reservas.html">RESERVAS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sedes.html">SEDES</a></li>
+                </ul>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="perfil.html" class="btn-icon-user" title="Mi Cuenta">
+                    <i class="bi bi-person-fill"></i>
+                </a>
+                <a href="carrito.html" class="text-light fs-5 position-relative text-decoration-none" title="Carrito">
+                    <i class="bi bi-cart3"></i>
+                    <span id="badgeCarritoNav" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; display: none;">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container py-5 main-wrapper">
+        <div class="row g-4">
+            <!-- SIDEBAR IZQUIERDO -->
+            <div class="col-lg-3 sidebar-column pe-lg-4">
+                <h2 class="titulo-cuenta">MI CUENTA</h2>
+
+                <div class="mt-2">
+                    <button type="button" class="sidebar-btn active" id="btnTabPerfil" onclick="cambiarVista('perfil')">
+                        <i class="bi bi-person"></i> Mi perfil
+                    </button>
+                    <button type="button" class="sidebar-btn" id="btnTabPedidos" onclick="cambiarVista('pedidos')">
+                        <i class="bi bi-bag-check"></i> Mis pedidos
+                    </button>
+                    <button type="button" class="sidebar-btn" id="btnTabReservas" onclick="cambiarVista('reservas')">
+                        <i class="bi bi-calendar2-check"></i> Mis reservas
+                    </button>
+                </div>
+
+                <div class="mt-5 text-center">
+                    <button type="button" class="btn-cerrar-sesion" onclick="cerrarSesion()">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL DERECHO -->
+            <div class="col-lg-9 ps-lg-4">
+
+                <!-- ========================================================= -->
+                <!-- VISTA 1: RESUMEN MI PERFIL (2x2 TARJETAS)                  -->
+                <!-- ========================================================= -->
+                <div id="vistaPerfil">
+                    <div class="row g-4">
+
+                        <!-- TARJETA 1: DATOS PERSONALES -->
+                        <div class="col-md-6">
+                            <div class="panel-card h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                                        <i class="bi bi-person-fill text-danger"></i> Mi perfil
+                                    </h6>
+                                    <button type="button" class="btn-card-outline" data-bs-toggle="modal" data-bs-target="#modalEditarPerfil">
+                                        Editar perfil
+                                    </button>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle" id="perfilIniciales">U</div>
+                                    <div>
+                                        <h6 class="fw-bold text-uppercase mb-1" id="perfilNombreCompleto">USUARIO</h6>
+                                        <div class="text-secondary small mb-1" id="perfilEmailTexto"></div>
+                                        <div class="text-secondary small">
+                                            <span id="perfilTelefono">Sin teléfono</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TARJETA 2: MIS DIRECCIONES -->
+                        <div class="col-md-6">
+                            <div class="panel-card h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                                        <i class="bi bi-geo-alt-fill text-danger"></i> Mis direcciones
+                                        <span class="badge-count" id="contadorDirecciones">0</span>
+                                    </h6>
+                                    <button type="button" class="link-ver-todos" data-bs-toggle="modal" data-bs-target="#modalVerDirecciones">
+                                        Ver todos
+                                    </button>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold small text-uppercase mb-1">
+                                            <i class="bi bi-house-door text-danger me-1"></i> <span id="direccionEtiquetaPrincipal">CASA</span>
+                                        </div>
+                                        <div class="text-secondary small" id="direccionTextoPrincipal">No hay dirección registrada.</div>
+                                        <div class="text-secondary small" id="direccionDistritoPrincipal">Lima, Perú</div>
+                                    </div>
+                                    <button type="button" class="btn-card-outline" data-bs-toggle="modal" data-bs-target="#modalAgregarDireccion">
+                                        Agregar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TARJETA 3: MIS PEDIDOS (CON ESTILO TARJETA + BOTÓN FLECHA) -->
+                        <div class="col-md-6">
+                            <div class="panel-card h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                                        <i class="bi bi-bag-fill text-danger"></i> Mis pedidos
+                                        <span class="badge-count" id="contadorPedidos" style="display: none;">0</span>
+                                    </h6>
+                                    <button type="button" class="link-ver-todos" onclick="cambiarVista('pedidos')">
+                                        Ver todos
+                                    </button>
+                                </div>
+
+                                <div id="tarjetaPedidoResumen">
+                                    <div class="reserva-preview-box">
+                                        <div>
+                                            <div class="fw-bold small text-uppercase mb-1">NO HAY PEDIDOS RECIENTES</div>
+                                            <div class="text-secondary small">¡Anímate a pedir tu ramen favorito!</div>
+                                        </div>
+                                        <a href="carta.html" class="btn-shimaya-red">Pedir</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TARJETA 4: MIS RESERVAS -->
+                        <div class="col-md-6">
+                            <div class="panel-card h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                                        <i class="bi bi-calendar-check text-danger"></i> Mis reservas
+                                        <span class="badge-count" id="contadorReservas" style="display: none;">0</span>
+                                    </h6>
+                                    <button type="button" class="link-ver-todos" onclick="cambiarVista('reservas')">
+                                        Ver todos
+                                    </button>
+                                </div>
+
+                                <div id="tarjetaReservaResumen">
+                                    <div class="reserva-preview-box">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="reserva-thumb-fallback">
+                                                <i class="bi bi-calendar-x fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold small text-uppercase mb-1">SIN RESERVAS ACTIVAS</div>
+                                                <div class="text-secondary small">Reserva una mesa pronto.</div>
+                                            </div>
+                                        </div>
+                                        <a href="reservas.html" class="btn-shimaya-red">Reservar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- VISTA 2: MIS PEDIDOS (IDÉNTICA AL DISEÑO SOLICITADO)      -->
+                <!-- ========================================================= -->
+                <div id="vistaPedidos" style="display: none;">
+                    <div class="mb-4">
+                        <h2 class="titulo-seccion-roja">Mis pedidos</h2>
+                        <p class="text-secondary small mb-0">Consulte su historial de pedidos</p>
+                    </div>
+
+                    <!-- BARRA DE BÚSQUEDA Y FILTRO POR FECHAS -->
+                    <div class="panel-card p-3 mb-4">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <div class="search-input-wrapper">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" id="filtroBuscarPedido" class="form-control form-control-sm" placeholder="Buscar pedido" oninput="filtrarHistorialPedidos()">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-3">
+                                <label class="form-label small text-secondary mb-1">Fecha Inicio</label>
+                                <input type="date" id="filtroPedidoInicio" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-sm-4 col-md-3">
+                                <label class="form-label small text-secondary mb-1">Fecha Fin</label>
+                                <input type="date" id="filtroPedidoFin" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-sm-4 col-md-2 d-flex gap-2">
+                                <button type="button" class="btn-shimaya-red w-100 d-flex align-items-center justify-content-center gap-1" onclick="filtrarHistorialPedidos()">
+                                    <i class="bi bi-funnel"></i> Filtrar
+                                </button>
+                                <button type="button" class="btn-card-outline px-2" id="btnLimpiarFiltroPedido" onclick="limpiarFiltroPedidos()" style="display: none;" title="Limpiar filtros">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HISTORIAL DE PEDIDOS -->
+                    <h6 class="fw-bold text-uppercase small tracking-wider mb-3">HISTORIAL DE PEDIDOS</h6>
+
+                    <div class="panel-card p-3">
+                        <div class="table-responsive">
+                            <table class="tabla-historial">
+                                <thead>
+                                    <tr>
+                                        <th>Nº PEDIDO</th>
+                                        <th>FECHA</th>
+                                        <th>PRODUCTOS</th>
+                                        <th>CANTIDAD</th>
+                                        <th>TOTAL</th>
+                                        <th>ESTADO</th>
+                                        <th>EXPORTAR</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyHistorialPedidos">
+                                    <tr>
+                                        <td colspan="7" class="text-secondary py-4">No tienes pedidos registrados aún.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PIE DE TABLA: CONTADOR + PAGINACIÓN -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 px-1">
+                        <div class="text-secondary small" id="textoContadorPedidos">
+                            Mostrando 0 de 0 pedidos
+                        </div>
+                        <div class="d-flex align-items-center gap-2" id="paginacionPedidos"></div>
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- VISTA 3: MIS RESERVAS                                     -->
+                <!-- ========================================================= -->
+                <div id="vistaReservas" style="display: none;">
+                    <div class="mb-4">
+                        <h2 class="titulo-seccion-roja">Mis reservas</h2>
+                        <p class="text-secondary small mb-0">Consulte su historial de reservas</p>
+                    </div>
+
+                    <div class="row g-4 align-items-stretch">
+                        <!-- COLUMNA IZQUIERDA: RESERVA ACTUAL + HISTORIAL -->
+                        <div class="col-lg-7">
+
+                            <!-- TARJETA RESERVA ACTUAL -->
+                            <div id="contenedorReservaActualCard">
+                                <div class="card-reserva-actual mb-4">
+                                    <span class="ribbon-reserva-actual">RESERVA ACTUAL</span>
+                                    <div class="text-center py-3 text-secondary small">
+                                        No tienes reservas registradas actualmente.
+                                        <div class="mt-2">
+                                            <a href="reservas.html" class="btn-shimaya-red">Hacer una reserva</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- HISTORIAL DE RESERVAS -->
+                            <div class="mt-4">
+                                <h6 class="fw-bold text-uppercase small tracking-wider mb-3">HISTORIAL DE RESERVAS</h6>
+
+                                <!-- FILTRO POR FECHAS -->
+                                <div class="panel-card p-3 mb-3">
+                                    <div class="row g-2 align-items-end">
+                                        <div class="col-sm-4">
+                                            <label class="form-label small text-secondary mb-1">Fecha Inicio</label>
+                                            <input type="date" id="filtroFechaInicio" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-label small text-secondary mb-1">Fecha Fin</label>
+                                            <input type="date" id="filtroFechaFin" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="col-sm-4 d-flex gap-2">
+                                            <button type="button" class="btn-shimaya-red w-100 d-flex align-items-center justify-content-center gap-1" onclick="filtrarHistorialReservas()">
+                                                <i class="bi bi-funnel"></i> Filtrar
+                                            </button>
+                                            <button type="button" class="btn-card-outline px-2" id="btnLimpiarFiltro" onclick="limpiarFiltroReservas()" style="display: none;" title="Mostrar todas">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TABLA DE RESERVAS -->
+                                <div class="panel-card p-3">
+                                    <div class="table-responsive">
+                                        <table class="tabla-historial">
+                                            <thead>
+                                                <tr>
+                                                    <th>CÓDIGO / FECHA</th>
+                                                    <th>PERSONAS</th>
+                                                    <th>SEDE</th>
+                                                    <th>ESTADO</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyHistorialReservas">
+                                                <tr>
+                                                    <td colspan="4" class="text-secondary py-4">No hay reservas para mostrar.</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- PAGINACIÓN -->
+                                    <div class="d-flex justify-content-center align-items-center gap-2 mt-3" id="paginacionReservas"></div>
+                                </div>
+
+                                <div class="text-secondary small mt-2 ps-1" id="textoContadorHistorial">
+                                    Mostrando 0 de 0 reservas
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COLUMNA DERECHA: DETALLE DE RESERVA + BOTÓN CANCELAR -->
+                        <div class="col-lg-5">
+                            <div class="panel-detalle-reserva d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="fw-bold text-uppercase mb-0">DETALLE DE RESERVA</h6>
+                                        <span id="detallePanelEstadoPill" class="badge-estado-confirmada">Confirmada</span>
+                                    </div>
+
+                                    <!-- FOTO DE LA SEDE ESCOGIDA -->
+                                    <img id="detalleImagenSede"
+                                         src="/images/MIRAFLORES.jpg"
+                                         alt="Sede seleccionada"
+                                         class="detalle-sede-banner"
+                                         onerror="this.src='/images/Logo.png'">
+
+                                    <!-- ENCABEZADO CON ICONO CALENDARIO -->
+                                    <div class="d-flex align-items-center gap-3 pb-3 mb-3 border-bottom border-secondary border-opacity-25">
+                                        <div id="detalleIconoCalendario" style="color: #22c55e; font-size: 2.3rem; line-height: 1;">
+                                            <i class="bi bi-calendar2-check"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-white fs-6" id="detalleTituloReserva">Reserva actual</div>
+                                            <div class="text-secondary small" id="detalleCodigoReserva">Código de reserva: #RSV-00000</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FILAS DE INFORMACIÓN -->
+                                    <div class="pb-2 mb-3 border-bottom border-secondary border-opacity-25">
+                                        <div class="detalle-item-row">
+                                            <div class="detalle-item-icon"><i class="bi bi-calendar3"></i></div>
+                                            <div class="detalle-item-label">Fecha</div>
+                                            <div class="detalle-item-value" id="detalleFecha">-</div>
+                                        </div>
+
+                                        <div class="detalle-item-row">
+                                            <div class="detalle-item-icon"><i class="bi bi-clock"></i></div>
+                                            <div class="detalle-item-label">Hora</div>
+                                            <div class="detalle-item-value" id="detalleHora">-</div>
+                                        </div>
+
+                                        <div class="detalle-item-row">
+                                            <div class="detalle-item-icon"><i class="bi bi-people"></i></div>
+                                            <div class="detalle-item-label">Personas</div>
+                                            <div class="detalle-item-value" id="detallePersonas">-</div>
+                                        </div>
+
+                                        <div class="detalle-item-row">
+                                            <div class="detalle-item-icon"><i class="bi bi-geo-alt"></i></div>
+                                            <div class="detalle-item-label">Sede</div>
+                                            <div class="detalle-item-value" id="detalleSede">-</div>
+                                        </div>
+
+                                        <div class="detalle-item-row">
+                                            <div class="detalle-item-icon"><i class="bi bi-telephone"></i></div>
+                                            <div class="detalle-item-label">Teléfono de contacto</div>
+                                            <div class="detalle-item-value" id="detalleTelefono">-</div>
+                                        </div>
+
+                                        <div class="detalle-item-row" id="filaDetalleOcasion" style="display: none;">
+                                            <div class="detalle-item-icon"><i class="bi bi-stars"></i></div>
+                                            <div class="detalle-item-label">Ocasión</div>
+                                            <div class="detalle-item-value" id="detalleOcasion">-</div>
+                                        </div>
+
+                                        <div class="detalle-item-row mb-0" id="filaDetalleComentarios" style="display: none;">
+                                            <div class="detalle-item-icon"><i class="bi bi-chat-left-text"></i></div>
+                                            <div class="detalle-item-label">Comentarios</div>
+                                            <div class="detalle-item-value" id="detalleComentarios">-</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- INFORMACIÓN IMPORTANTE -->
+                                    <div>
+                                        <div class="info-importante-titulo">INFORMACIÓN IMPORTANTE</div>
+                                        <div class="info-importante-item">
+                                            <i class="bi bi-clock text-secondary mt-1"></i>
+                                            <span>Llega 10 minutos antes de tu reserva.</span>
+                                        </div>
+                                        <div class="info-importante-item mb-0">
+                                            <i class="bi bi-x-circle text-secondary mt-1"></i>
+                                            <span>En caso de no asistir, por favor cancela con anticipación.</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- PASO 2: DOBLE CONFIRMACIÓN DE CANCELACIÓN -->
+                                    <div id="bloqueConfirmarCancelacion" class="confirmacion-cancelar-box" style="display: none;">
+                                        <div class="d-flex align-items-start gap-2">
+                                            <i class="bi bi-exclamation-triangle-fill text-danger fs-5 mt-1"></i>
+                                            <div class="w-100">
+                                                <div class="fw-bold text-white small mb-1">¿Estás seguro de que deseas cancelar esta reserva?</div>
+                                                <p class="text-secondary small mb-3">
+                                                    Esta acción cambiará el estado de tu reserva a <strong>Cancelada</strong> y liberará la mesa.
+                                                </p>
+                                                <div class="d-flex justify-content-end gap-2">
+                                                    <button type="button" class="btn-card-outline" onclick="ocultarConfirmacionCancelar()">
+                                                        No, mantener
+                                                    </button>
+                                                    <button type="button" class="btn-shimaya-red" id="btnConfirmarCancelacionFinal" onclick="ejecutarCancelacionReserva()">
+                                                        Sí, cancelar reserva
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PASO 3: MENSAJE DE CONFIRMACIÓN TRAS CANCELAR -->
+                                    <div id="bloqueReservaCanceladaExito" class="mensaje-cancelado-box" style="display: none;">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                            <div>
+                                                <div class="fw-bold text-white small">Usted canceló su reserva</div>
+                                                <div class="text-secondary" style="font-size: 0.78rem;">
+                                                    El estado ha sido actualizado a Cancelada en el sistema.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- BOTONES INFERIORES: VOLVER Y CANCELAR -->
+                                <div class="d-flex justify-content-between align-items-center gap-2 pt-4 mt-4 border-top border-secondary border-opacity-25">
+                                    <button type="button" class="btn-card-outline px-3 py-2" onclick="cambiarVista('perfil')">
+                                        <i class="bi bi-arrow-left me-1"></i> Volver
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm px-3 py-2 fw-semibold" id="btnIniciarCancelacion" onclick="mostrarConfirmacionCancelar()">
+                                        <i class="bi bi-x-circle me-1"></i> Cancelar reserva
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER SHIMAYA RAMEN -->
+    <footer class="footer-shimaya">
+        <div class="container">
+            <div class="row align-items-center text-center text-md-start g-4">
+                <div class="col-md-4">
+                    <div class="fw-bold small text-uppercase mb-3 tracking-wider">SÍGUENOS</div>
+                    <div class="d-flex justify-content-center justify-content-md-start gap-4">
+                        <a href="#" class="social-icon-link" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon-link" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 text-center">
+                    <img src="/images/Logo.png" width="60" height="60" class="rounded-circle mb-2" alt="Logo Shimaya" style="object-fit: cover; border: 2px solid #e63946;">
+                    <div class="fw-bold fs-6 tracking-wider lh-1">SHIMAYA</div>
+                    <div class="text-danger fw-bold" style="font-size: 0.75rem; letter-spacing: 2px;">RAMEN</div>
+                </div>
+
+                <div class="col-md-4 d-flex flex-column align-items-center align-items-md-end">
+                    <div>
+                        <div class="fw-bold small text-uppercase mb-2 tracking-wider">ATENCIÓN AL CLIENTE</div>
+                        <div class="text-light small mb-2">
+                            <i class="bi bi-whatsapp me-2 text-secondary"></i> 960 166 995
+                        </div>
+                        <div class="text-light small">
+                            <i class="bi bi-envelope me-2 text-secondary"></i> ramen@shimaya.pe
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DETALLE DE PEDIDO (AL HACER CLIC EN UNA FILA DEL HISTORIAL) -->
+    <div class="modal fade" id="modalDetallePedido" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-secondary border-opacity-25">
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="modalPedidoTitulo">Detalle del Pedido #0000</h5>
+                        <small class="text-secondary" id="modalPedidoComprobante">Comprobante: B001-000000</small>
+                    </div>
+                    <span id="modalPedidoEstadoBadge" class="badge-estado-confirmada">Entregado</span>
+                </div>
+                <div class="modal-body">
+                    <div class="p-3 rounded mb-3" style="background:#1b1b1b; border:1px solid #2b2b2b;">
+                        <div class="small text-secondary mb-1">Fecha y hora</div>
+                        <div class="fw-semibold text-white small mb-2" id="modalPedidoFecha">-</div>
+                        <div class="small text-secondary mb-1">Modalidad y dirección</div>
+                        <div class="fw-semibold text-white small mb-2" id="modalPedidoEntrega">-</div>
+                        <div class="small text-secondary mb-1">N° Operación de pago</div>
+                        <div class="fw-semibold text-warning small" id="modalPedidoOperacion">---</div>
+                    </div>
+
+                    <div class="fw-bold small text-uppercase text-secondary mb-2">Productos del pedido</div>
+                    <div id="modalPedidoProductosLista" class="mb-3"></div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top border-secondary border-opacity-25">
+                        <span class="fw-bold text-uppercase small">Total pagado</span>
+                        <span class="fw-bold fs-5 text-white" id="modalPedidoTotal">S/. 0.00</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-25 justify-content-between">
+                    <button type="button" class="btn-card-outline" data-bs-dismiss="modal">Volver</button>
+                    <button type="button" class="btn-exportar-pdf py-2 px-3" id="btnModalExportarPedidoPDF">
+                        <i class="bi bi-file-earmark-pdf-fill text-danger"></i> Exportar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: EDITAR DATOS PERSONALES -->
+    <div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-secondary border-opacity-25">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square text-danger me-2"></i>Editar datos personales</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="formEditarPerfil" onsubmit="guardarCambiosPerfil(event)">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small text-secondary">Nombre</label>
+                                <input type="text" id="editNombre" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small text-secondary">Apellidos</label>
+                                <input type="text" id="editApellidos" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small text-secondary">Correo electrónico</label>
+                                <input type="email" id="editEmail" class="form-control" readonly disabled>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small text-secondary">Teléfono / Celular</label>
+                                <input type="text" id="editTelefono" class="form-control" placeholder="Ej. 900601538">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small text-secondary">Dirección principal</label>
+                                <input type="text" id="editDireccion" class="form-control" placeholder="Ej. Jr. Júpiter 359">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small text-secondary">Nueva contraseña (dejar vacío para no cambiar)</label>
+                                <input type="password" id="editPassword" class="form-control" placeholder="••••••••">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary border-opacity-25">
+                        <button type="button" class="btn-card-outline" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-shimaya-red px-4 py-2">Guardar en Base de Datos</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: AGREGAR DIRECCIÓN -->
+    <div class="modal fade" id="modalAgregarDireccion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-secondary border-opacity-25">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Agregar nueva dirección</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="formAgregarDireccion" onsubmit="guardarNuevaDireccion(event)">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Etiqueta</label>
+                            <select id="nuevaDirEtiqueta" class="form-select">
+                                <option value="CASA">CASA</option>
+                                <option value="TRABAJO">TRABAJO</option>
+                                <option value="OTRO">OTRO</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Distrito *</label>
+                            <input type="text" id="nuevaDirDistrito" class="form-control" placeholder="Ej. Miraflores, Surco, San Borja..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Dirección exacta *</label>
+                            <input type="text" id="nuevaDirExacta" class="form-control" placeholder="Ej. Av. Primavera 1234" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Referencia</label>
+                            <input type="text" id="nuevaDirReferencia" class="form-control" placeholder="Ej. Frente al parque">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="nuevaDirPrincipal" checked>
+                            <label class="form-check-label small text-secondary" for="nuevaDirPrincipal">
+                                Establecer como dirección principal
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary border-opacity-25">
+                        <button type="button" class="btn-card-outline" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-shimaya-red px-4 py-2">Guardar Dirección</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: VER TODAS LAS DIRECCIONES -->
+    <div class="modal fade" id="modalVerDirecciones" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-secondary border-opacity-25">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-map text-danger me-2"></i>Mis direcciones guardadas</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="listaDireccionesModal">
+                    <p class="text-secondary small mb-0">No hay direcciones registradas.</p>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-25">
+                    <button type="button" class="btn-shimaya-red" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modalAgregarDireccion">
+                        + Agregar otra dirección
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = window.location.origin.includes('8080') ? '' : 'http://localhost:8080';
+        let usuarioActual = null;
+        let direccionesActuales = [];
+        let sedesCatalogo = [];
+
+        // Estado Pedidos
+        let pedidosActuales = [];
+        let pedidosFiltrados = [];
+        let paginaActualPedidos = 1;
+        const PEDIDOS_POR_PAGINA = 5;
+
+        // Estado Reservas
+        let reservasActuales = [];
+        let reservasFiltradas = [];
+        let reservaSeleccionada = null;
+        let paginaActualReservas = 1;
+        const RESERVAS_POR_PAGINA = 5;
+
+        // Mapeo oficial de las 6 imágenes de sedes subidas en static/images
+        const IMAGENES_SEDES_LOCAL = {
+            1: { nombre: 'Miraflores', imagen: '/images/MIRAFLORES.jpg', direccion: 'Av. Benavides 123, Miraflores', distrito: 'Lima, Perú' },
+            2: { nombre: 'Santa Anita', imagen: '/images/SANTA ANITA.jpg', direccion: 'Mall Aventura, Santa Anita', distrito: 'Lima, Perú' },
+            3: { nombre: 'San Isidro', imagen: '/images/SAN ISIDRO.jpg', direccion: 'Av. Camino Real, San Isidro', distrito: 'Lima, Perú' },
+            4: { nombre: 'Lince', imagen: '/images/LINCE.jpg', direccion: 'Av. Arenales 1890, Lince', distrito: 'Lima, Perú' },
+            5: { nombre: 'La Molina', imagen: '/images/MOLINA.jpg', direccion: 'Av. Flora Tristán 471', distrito: 'Lima, Perú' },
+            6: { nombre: 'San Miguel', imagen: '/images/SAN MIGUEL.jpg', direccion: 'Plaza San Miguel', distrito: 'Lima, Perú' }
+        };
+
+        function resolverImagenSede(idSede, nombreSede) {
+            const nombreLower = (nombreSede || '').toLowerCase();
+            if (nombreLower.includes('miraflores')) return '/images/MIRAFLORES.jpg';
+            if (nombreLower.includes('santa anita')) return '/images/SANTA ANITA.jpg';
+            if (nombreLower.includes('san isidro')) return '/images/SAN ISIDRO.jpg';
+            if (nombreLower.includes('lince')) return '/images/LINCE.jpg';
+            if (nombreLower.includes('molina')) return '/images/MOLINA.jpg';
+            if (nombreLower.includes('san miguel')) return '/images/SAN MIGUEL.jpg';
+
+            const idNum = Number(idSede);
+            if (IMAGENES_SEDES_LOCAL[idNum]) {
+                return IMAGENES_SEDES_LOCAL[idNum].imagen;
+            }
+            return '/images/MIRAFLORES.jpg';
+        }
+
+        const DIAS_ES = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const MESES_ES = [
+            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+
+        function formatearFechaConDia(fechaStr) {
+            if (!fechaStr) return '-';
+            const partes = String(fechaStr).split('T')[0].split(' ')[0].split('-');
+            if (partes.length !== 3) return fechaStr;
+            const anio = parseInt(partes[0], 10);
+            const mesIdx = parseInt(partes[1], 10) - 1;
+            const dia = parseInt(partes[2], 10);
+            const fechaObj = new Date(anio, mesIdx, dia);
+            const nombreDia = DIAS_ES[fechaObj.getDay()] || '';
+            const nombreMes = MESES_ES[mesIdx] || partes[1];
+            return `${nombreDia}, ${dia} de ${nombreMes} de ${anio}`;
+        }
+
+        function formatearFechaMesAnio(fechaStr) {
+            if (!fechaStr) return '-';
+            const partes = String(fechaStr).split('T')[0].split(' ')[0].split('-');
+            if (partes.length !== 3) return fechaStr;
+            const anio = partes[0];
+            const mesIdx = parseInt(partes[1], 10) - 1;
+            const dia = partes[2].padStart(2, '0');
+            return `${dia} de ${MESES_ES[mesIdx] || partes[1]}, ${anio}`;
+        }
+
+        function formatearFechaCorta(fechaStr) {
+            if (!fechaStr) return '-';
+            const partes = String(fechaStr).split('T')[0].split(' ')[0].split('-');
+            if (partes.length !== 3) return fechaStr;
+            return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
+        }
+
+        function extraerSoloFechaISO(fechaHoraStr) {
+            if (!fechaHoraStr) return '';
+            return String(fechaHoraStr).split('T')[0].split(' ')[0];
+        }
+
+        function extraerHoraDeDateTime(fechaHoraStr) {
+            if (!fechaHoraStr) return '';
+            const str = String(fechaHoraStr);
+            if (str.includes('T')) return str.split('T')[1].substring(0, 5);
+            if (str.includes(' ')) return str.split(' ')[1].substring(0, 5);
+            return str.substring(0, 5);
+        }
+
+        function formatearHoraAmPm(horaStr) {
+            if (!horaStr) return '-';
+            const hhmm = String(horaStr).substring(0, 5);
+            const horaNum = parseInt(hhmm.split(':')[0], 10);
+            if (isNaN(horaNum)) return hhmm;
+            return `${hhmm} ${horaNum >= 12 ? 'pm' : 'am'}`;
+        }
+
+        function obtenerClaseBadgeEstadoPedido(estadoRaw) {
+            const st = (estadoRaw || '').toUpperCase();
+            if (st.includes('ENTREGADO') || st.includes('COMPLETADO')) return 'badge-estado-confirmada';
+            if (st.includes('CANCELADO')) return 'badge-estado-cancelada';
+            return 'badge-estado-proceso';
+        }
+
+        function capitalizarTexto(texto) {
+            if (!texto) return '';
+            const lower = String(texto).toLowerCase();
+            return lower.charAt(0).toUpperCase() + lower.slice(1);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const estaLogueado = localStorage.getItem('usuarioLogueado') === 'true';
+            const email = (localStorage.getItem('usuarioEmail') || '').trim();
+
+            if (!estaLogueado || !email) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const itemsCarrito = JSON.parse(localStorage.getItem('carritoItems')) || [];
+            const totalUnidades = itemsCarrito.reduce((acc, it) => acc + (it.cantidad || 1), 0);
+            const badge = document.getElementById('badgeCarritoNav');
+            if (totalUnidades > 0) {
+                badge.textContent = totalUnidades;
+                badge.style.display = 'inline-block';
+            }
+
+            let dataLocal = {};
+            try {
+                dataLocal = JSON.parse(localStorage.getItem('usuarioData')) || {};
+            } catch (e) {}
+
+            usuarioActual = {
+                idUsuario: localStorage.getItem('usuarioId') || dataLocal.idUsuario || '',
+                nombre: localStorage.getItem('usuarioNombre') || dataLocal.nombre || '',
+                apellidos: localStorage.getItem('usuarioApellidos') || dataLocal.apellidos || '',
+                email: email,
+                telefono: localStorage.getItem('usuarioTelefono') || dataLocal.telefono || '',
+                direccionHabitual: localStorage.getItem('usuarioDireccion') || dataLocal.direccionHabitual || ''
+            };
+            pintarDatosUsuario(usuarioActual);
+
+            await Promise.all([
+                cargarPerfilDesdeMySQL(email),
+                cargarDireccionesDesdeMySQL(email),
+                cargarSedesCatalogo(),
+                cargarPedidosUsuario(email)
+            ]);
+
+            await cargarReservasUsuario(email);
+        });
+
+        async function cargarSedesCatalogo() {
+            try {
+                const resp = await fetch(`${API_BASE}/api/sedes`, { cache: 'no-store' });
+                if (resp.ok) {
+                    sedesCatalogo = await resp.json();
+                }
+            } catch (ignored) {}
+        }
+
+        function obtenerInfoSede(idSede, nombreFallback) {
+            const encontrada = sedesCatalogo.find(s => Number(s.idSede) === Number(idSede));
+            const fallbackLocal = IMAGENES_SEDES_LOCAL[Number(idSede)];
+            const nombreFinal = (encontrada && encontrada.nombre) || nombreFallback || (fallbackLocal && fallbackLocal.nombre) || 'Sede Shimaya';
+            const imagenFinal = resolverImagenSede(idSede, nombreFinal);
+
+            if (encontrada) {
+                return {
+                    nombre: nombreFinal,
+                    direccion: encontrada.direccion || (fallbackLocal && fallbackLocal.direccion) || '',
+                    distrito: encontrada.distrito || 'Lima, Perú',
+                    telefono: encontrada.telefono || '',
+                    imagen: imagenFinal
+                };
+            }
+            return {
+                nombre: nombreFinal,
+                direccion: (fallbackLocal && fallbackLocal.direccion) || '',
+                distrito: 'Lima, Perú',
+                telefono: '',
+                imagen: imagenFinal
+            };
+        }
+
+        async function cargarPerfilDesdeMySQL(email) {
+            try {
+                const resp = await fetch(`${API_BASE}/api/perfil/por-email?email=${encodeURIComponent(email)}`, { cache: 'no-store' });
+                if (resp.ok) {
+                    const u = await resp.json();
+                    usuarioActual = u;
+                    localStorage.setItem('usuarioData', JSON.stringify(u));
+                    localStorage.setItem('usuarioId', u.idUsuario || '');
+                    localStorage.setItem('usuarioNombre', u.nombre || '');
+                    localStorage.setItem('usuarioApellidos', u.apellidos || '');
+                    localStorage.setItem('usuarioTelefono', u.telefono || '');
+                    localStorage.setItem('usuarioDireccion', u.direccionHabitual || '');
+                    pintarDatosUsuario(u);
+                }
+            } catch (err) {
+                console.warn('No se pudo conectar con /api/perfil/por-email:', err);
+            }
+        }
+
+        function pintarDatosUsuario(u) {
+            const nombre = (u.nombre || '').trim();
+            const apellidos = (u.apellidos || '').trim();
+            const nombreCompleto = `${nombre} ${apellidos}`.trim() || 'USUARIO';
+
+            const partes = nombreCompleto.split(/\s+/);
+            const iniciales = partes.length >= 2
+                ? (partes[0][0] + partes[1][0]).toUpperCase()
+                : nombreCompleto.substring(0, 2).toUpperCase();
+
+            document.getElementById('perfilIniciales').textContent = iniciales;
+            document.getElementById('perfilNombreCompleto').textContent = nombreCompleto.toUpperCase();
+            document.getElementById('perfilTelefono').textContent = (u.telefono && u.telefono.trim() !== '') ? u.telefono : 'Sin teléfono';
+            document.getElementById('perfilEmailTexto').textContent = u.email || '';
+
+            document.getElementById('editNombre').value = nombre;
+            document.getElementById('editApellidos').value = apellidos;
+            document.getElementById('editEmail').value = u.email || '';
+            document.getElementById('editTelefono').value = u.telefono || '';
+            document.getElementById('editDireccion').value = u.direccionHabitual || '';
+
+            if (u.direccionHabitual && u.direccionHabitual.trim() !== '') {
+                document.getElementById('direccionTextoPrincipal').textContent = u.direccionHabitual;
+                document.getElementById('contadorDirecciones').textContent = '1';
+            }
+        }
+
+        async function cargarDireccionesDesdeMySQL(email) {
+            try {
+                const resp = await fetch(`${API_BASE}/api/perfil/direcciones?email=${encodeURIComponent(email)}`, { cache: 'no-store' });
+                if (resp.ok) {
+                    direccionesActuales = await resp.json();
+                    pintarDirecciones(direccionesActuales);
+                }
+            } catch (err) {
+                console.warn('No se pudo cargar lista de direcciones:', err);
+            }
+        }
+
+        function pintarDirecciones(lista) {
+            const badge = document.getElementById('contadorDirecciones');
+            const etiquetaEl = document.getElementById('direccionEtiquetaPrincipal');
+            const textoEl = document.getElementById('direccionTextoPrincipal');
+            const distritoEl = document.getElementById('direccionDistritoPrincipal');
+            const modalLista = document.getElementById('listaDireccionesModal');
+
+            if (!lista || lista.length === 0) {
+                if (usuarioActual && usuarioActual.direccionHabitual && usuarioActual.direccionHabitual.trim() !== '') {
+                    badge.textContent = '1';
+                    etiquetaEl.textContent = 'CASA';
+                    textoEl.textContent = usuarioActual.direccionHabitual;
+                    distritoEl.textContent = 'Lima, Perú';
+                } else {
+                    badge.textContent = '0';
+                    etiquetaEl.textContent = 'CASA';
+                    textoEl.textContent = 'No hay dirección registrada.';
+                    distritoEl.textContent = 'Lima, Perú';
+                }
+                modalLista.innerHTML = '<p class="text-secondary small mb-0">No tienes direcciones adicionales registradas.</p>';
+                return;
+            }
+
+            badge.textContent = lista.length;
+            const principal = lista[0];
+            etiquetaEl.textContent = principal.etiqueta || 'CASA';
+            textoEl.textContent = principal.direccionExacta || 'No hay dirección registrada.';
+            distritoEl.textContent = principal.distrito ? `${principal.distrito}, Perú` : 'Lima, Perú';
+
+            modalLista.innerHTML = lista.map(d => `
+                <div class="p-3 mb-2 rounded" style="background:#1c1c1c; border:1px solid #303030;">
+                    <div class="fw-bold text-danger small text-uppercase">${d.etiqueta || 'CASA'}</div>
+                    <div class="text-white small">${d.direccionExacta}</div>
+                    <div class="text-secondary small">${d.distrito || 'Lima'} ${d.referencia ? '• Ref: ' + d.referencia : ''}</div>
+                </div>
+            `).join('');
+        }
+
+        async function guardarCambiosPerfil(event) {
+            event.preventDefault();
+            const payload = {
+                email: document.getElementById('editEmail').value.trim(),
+                nombre: document.getElementById('editNombre').value.trim(),
+                apellidos: document.getElementById('editApellidos').value.trim(),
+                telefono: document.getElementById('editTelefono').value.trim(),
+                direccionHabitual: document.getElementById('editDireccion').value.trim(),
+                password: document.getElementById('editPassword').value.trim()
+            };
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/perfil/actualizar-por-email`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!resp.ok) {
+                    alert('❌ Error al actualizar perfil en MySQL.');
+                    return;
+                }
+
+                const actualizado = await resp.json();
+                usuarioActual = actualizado;
+                localStorage.setItem('usuarioData', JSON.stringify(actualizado));
+                localStorage.setItem('usuarioNombre', actualizado.nombre || '');
+                localStorage.setItem('usuarioApellidos', actualizado.apellidos || '');
+                localStorage.setItem('usuarioTelefono', actualizado.telefono || '');
+                localStorage.setItem('usuarioDireccion', actualizado.direccionHabitual || '');
+
+                pintarDatosUsuario(actualizado);
+                document.getElementById('editPassword').value = '';
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil')).hide();
+                alert('✅ Datos actualizados correctamente en MySQL.');
+            } catch (err) {
+                alert('❌ No se pudo conectar con el servidor Spring Boot.');
+            }
+        }
+
+        async function guardarNuevaDireccion(event) {
+            event.preventDefault();
+            const payload = {
+                email: usuarioActual.email,
+                etiqueta: document.getElementById('nuevaDirEtiqueta').value,
+                distrito: document.getElementById('nuevaDirDistrito').value.trim(),
+                direccionExacta: document.getElementById('nuevaDirExacta').value.trim(),
+                referencia: document.getElementById('nuevaDirReferencia').value.trim(),
+                principal: document.getElementById('nuevaDirPrincipal').checked
+            };
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/perfil/direcciones`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!resp.ok) {
+                    alert('❌ Error al guardar la dirección en MySQL.');
+                    return;
+                }
+
+                direccionesActuales = await resp.json();
+                if (payload.principal) {
+                    const dirTexto = `${payload.direccionExacta} (${payload.distrito})`;
+                    usuarioActual.direccionHabitual = dirTexto;
+                    localStorage.setItem('usuarioDireccion', dirTexto);
+                }
+
+                pintarDirecciones(direccionesActuales);
+                document.getElementById('formAgregarDireccion').reset();
+                bootstrap.Modal.getInstance(document.getElementById('modalAgregarDireccion')).hide();
+                alert('✅ Dirección guardada en MySQL.');
+            } catch (err) {
+                alert('❌ No se pudo conectar con el servidor Spring Boot.');
+            }
+        }
+
+        // =========================================================
+        // SECCIÓN PEDIDOS (RESUMEN EN PERFIL + VISTA MIS PEDIDOS)
+        // =========================================================
+        async function cargarPedidosUsuario(email) {
+            try {
+                let resp = await fetch(`${API_BASE}/api/perfil/pedidos?email=${encodeURIComponent(email)}`, { cache: 'no-store' });
+                if (!resp.ok) {
+                    resp = await fetch(`${API_BASE}/api/pedidos/usuario/${encodeURIComponent(email)}`, { cache: 'no-store' });
+                }
+                if (resp.ok) {
+                    pedidosActuales = await resp.json();
+                    pedidosFiltrados = [...pedidosActuales];
+                    pintarResumenPedidoPerfil(pedidosActuales);
+                    renderizarTablaPedidos();
+                }
+            } catch (err) {
+                console.warn('No se pudieron cargar pedidos:', err);
+            }
+        }
+
+        function pintarResumenPedidoPerfil(pedidos) {
+            const badge = document.getElementById('contadorPedidos');
+            const tarjetaResumen = document.getElementById('tarjetaPedidoResumen');
+
+            if (!pedidos || pedidos.length === 0) {
+                badge.style.display = 'none';
+                tarjetaResumen.innerHTML = `
+                    <div class="reserva-preview-box">
+                        <div>
+                            <div class="fw-bold small text-uppercase mb-1">NO HAY PEDIDOS RECIENTES</div>
+                            <div class="text-secondary small">¡Anímate a pedir tu ramen favorito!</div>
+                        </div>
+                        <a href="carta.html" class="btn-shimaya-red">Pedir</a>
+                    </div>
+                `;
+                return;
+            }
+
+            badge.textContent = pedidos.length;
+            badge.style.display = 'inline-block';
+
+            const ultimo = pedidos[0];
+            const fechaBonita = formatearFechaMesAnio(ultimo.fechaHora);
+            const horaBonita = formatearHoraAmPm(extraerHoraDeDateTime(ultimo.fechaHora));
+            const cant = ultimo.cantidadTotal || (Array.isArray(ultimo.productos) && ultimo.productos.length > 0 ? ultimo.productos.length : 1);
+            const textoProductos = `${cant} ${cant === 1 ? 'producto' : 'productos'}`;
+            const estadoTexto = capitalizarTexto(ultimo.estadoPedido || 'En preparación');
+            const claseBadge = obtenerClaseBadgeEstadoPedido(ultimo.estadoPedido);
+            const monto = Number(ultimo.montoTotal || 0).toFixed(2);
+
+            tarjetaResumen.innerHTML = `
+                <div class="reserva-preview-box">
+                    <div class="lh-sm">
+                        <div class="fw-bold small text-uppercase text-white mb-1">PEDIDO #${ultimo.idPedido}</div>
+                        <div class="text-secondary small mb-1">${fechaBonita} - ${horaBonita}</div>
+                        <div class="text-light small">${textoProductos}</div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-end">
+                            <div class="mb-1"><span class="${claseBadge}">${estadoTexto}</span></div>
+                            <div class="fw-bold text-white small">S/. ${monto}</div>
+                        </div>
+                        <button type="button" class="btn-circle-arrow" onclick="cambiarVista('pedidos')" title="Ver historial de pedidos">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderizarTablaPedidos() {
+            const tbody = document.getElementById('tbodyHistorialPedidos');
+            const paginacionEl = document.getElementById('paginacionPedidos');
+            const contadorEl = document.getElementById('textoContadorPedidos');
+
+            const total = pedidosFiltrados.length;
+            if (total === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-secondary py-4">No se encontraron pedidos con los filtros aplicados.</td></tr>`;
+                paginacionEl.innerHTML = '';
+                contadorEl.textContent = 'Mostrando 0 de 0 pedidos';
+                return;
+            }
+
+            const totalPaginas = Math.ceil(total / PEDIDOS_POR_PAGINA);
+            if (paginaActualPedidos > totalPaginas) paginaActualPedidos = 1;
+
+            const inicio = (paginaActualPedidos - 1) * PEDIDOS_POR_PAGINA;
+            const fin = Math.min(inicio + PEDIDOS_POR_PAGINA, total);
+            const slice = pedidosFiltrados.slice(inicio, fin);
+
+            tbody.innerHTML = slice.map(p => {
+                const fechaCorta = formatearFechaCorta(p.fechaHora);
+                const horaAmPm = formatearHoraAmPm(extraerHoraDeDateTime(p.fechaHora));
+                const listaProds = Array.isArray(p.productos) && p.productos.length > 0
+                    ? p.productos.map(nombre => `<div>${nombre}</div>`).join('')
+                    : `<div>${p.tipoEntrega || 'Pedido Shimaya'}</div>`;
+                const cantidad = p.cantidadTotal || (Array.isArray(p.productos) && p.productos.length > 0 ? p.productos.length : 1);
+                const totalMonto = Number(p.montoTotal || 0).toFixed(2);
+                const estadoTexto = capitalizarTexto(p.estadoPedido || 'En preparación');
+                const claseBadge = obtenerClaseBadgeEstadoPedido(p.estadoPedido);
+                const esCancelado = (p.estadoPedido || '').toUpperCase().includes('CANCELADO');
+
+                return `
+                    <tr onclick="abrirDetallePedido(${p.idPedido})">
+                        <td class="fw-bold text-white">#${p.idPedido}</td>
+                        <td>
+                            <div class="text-white">${fechaCorta}</div>
+                            <div class="text-secondary small">${horaAmPm}</div>
+                        </td>
+                        <td class="lh-sm">${listaProds}</td>
+                        <td>${cantidad}</td>
+                        <td class="fw-semibold">${totalMonto}</td>
+                        <td><span class="${claseBadge}">${estadoTexto}</span></td>
+                        <td onclick="event.stopPropagation();">
+                            ${!esCancelado ? `
+                                <button type="button" class="btn-exportar-pdf" onclick="exportarPedidoPDF(${p.idPedido})">
+                                    <i class="bi bi-file-earmark-pdf-fill text-danger"></i> PDF
+                                </button>
+                            ` : '<span class="text-secondary small">-</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            let pagHtml = `
+                <button type="button" class="page-btn" ${paginaActualPedidos === 1 ? 'disabled' : ''} onclick="cambiarPaginaPedidos(${paginaActualPedidos - 1})">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            `;
+            for (let pg = 1; pg <= totalPaginas; pg++) {
+                pagHtml += `
+                    <button type="button" class="page-btn ${pg === paginaActualPedidos ? 'active' : ''}" onclick="cambiarPaginaPedidos(${pg})">${pg}</button>
+                `;
+            }
+            pagHtml += `
+                <button type="button" class="page-btn" ${paginaActualPedidos === totalPaginas ? 'disabled' : ''} onclick="cambiarPaginaPedidos(${paginaActualPedidos + 1})">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            `;
+            paginacionEl.innerHTML = pagHtml;
+            contadorEl.textContent = `Mostrando ${inicio + 1} a ${fin} de ${total} pedidos`;
+        }
+
+        function cambiarPaginaPedidos(nuevaPagina) {
+            paginaActualPedidos = nuevaPagina;
+            renderizarTablaPedidos();
+        }
+
+        function filtrarHistorialPedidos() {
+            const texto = (document.getElementById('filtroBuscarPedido').value || '').trim().toLowerCase();
+            const inicio = document.getElementById('filtroPedidoInicio').value;
+            const fin = document.getElementById('filtroPedidoFin').value;
+
+            pedidosFiltrados = pedidosActuales.filter(p => {
+                const fechaISO = extraerSoloFechaISO(p.fechaHora);
+                if (inicio && fechaISO && fechaISO < inicio) return false;
+                if (fin && fechaISO && fechaISO > fin) return false;
+
+                if (texto) {
+                    const idStr = `#${p.idPedido} ${p.idPedido}`.toLowerCase();
+                    const prodsStr = Array.isArray(p.productos) ? p.productos.join(' ').toLowerCase() : '';
+                    const estadoStr = (p.estadoPedido || '').toLowerCase();
+                    if (!idStr.includes(texto) && !prodsStr.includes(texto) && !estadoStr.includes(texto)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            document.getElementById('btnLimpiarFiltroPedido').style.display = (texto || inicio || fin) ? 'inline-block' : 'none';
+            paginaActualPedidos = 1;
+            renderizarTablaPedidos();
+        }
+
+        function limpiarFiltroPedidos() {
+            document.getElementById('filtroBuscarPedido').value = '';
+            document.getElementById('filtroPedidoInicio').value = '';
+            document.getElementById('filtroPedidoFin').value = '';
+            document.getElementById('btnLimpiarFiltroPedido').style.display = 'none';
+            pedidosFiltrados = [...pedidosActuales];
+            paginaActualPedidos = 1;
+            renderizarTablaPedidos();
+        }
+
+        function abrirDetallePedido(idPedido) {
+            const p = pedidosActuales.find(item => Number(item.idPedido) === Number(idPedido));
+            if (!p) return;
+
+            document.getElementById('modalPedidoTitulo').textContent = `Detalle del Pedido #${p.idPedido}`;
+            document.getElementById('modalPedidoComprobante').textContent = `Comprobante: ${p.numSerie || 'B001-' + String(p.idPedido).padStart(6, '0')}`;
+
+            const badge = document.getElementById('modalPedidoEstadoBadge');
+            badge.textContent = capitalizarTexto(p.estadoPedido || 'En preparación');
+            badge.className = obtenerClaseBadgeEstadoPedido(p.estadoPedido);
+
+            document.getElementById('modalPedidoFecha').textContent = `${formatearFechaConDia(p.fechaHora)} • ${formatearHoraAmPm(extraerHoraDeDateTime(p.fechaHora))}`;
+            document.getElementById('modalPedidoEntrega').textContent = `${p.tipoEntrega || 'DELIVERY'}${p.direccionEnvio ? ' — ' + p.direccionEnvio : ''}`;
+            document.getElementById('modalPedidoOperacion').textContent = p.codigoOperacion || p.codigoYape || '---';
+            document.getElementById('modalPedidoTotal').textContent = `S/. ${Number(p.montoTotal || 0).toFixed(2)}`;
+
+            const listaEl = document.getElementById('modalPedidoProductosLista');
+            if (Array.isArray(p.items) && p.items.length > 0) {
+                listaEl.innerHTML = p.items.map(it => `
+                    <div class="d-flex justify-content-between align-items-center p-2 mb-2 rounded" style="background:#1b1b1b; border:1px solid #292929;">
+                        <div>
+                            <div class="fw-semibold text-white small">${it.nombre}</div>
+                            <div class="text-secondary" style="font-size: 0.76rem;">Cant: ${it.cantidad} × S/. ${Number(it.precioUnitario || 0).toFixed(2)}</div>
+                        </div>
+                        <div class="fw-bold text-white small">S/. ${Number(it.subtotal || 0).toFixed(2)}</div>
+                    </div>
+                `).join('');
+            } else {
+                listaEl.innerHTML = `<div class="text-secondary small">Orden registrada (${p.tipoEntrega || 'Delivery'}).</div>`;
+            }
+
+            document.getElementById('btnModalExportarPedidoPDF').onclick = () => exportarPedidoPDF(p.idPedido);
+
+            const modal = new bootstrap.Modal(document.getElementById('modalDetallePedido'));
+            modal.show();
+        }
+
+        function exportarPedidoPDF(idPedido) {
+            const p = pedidosActuales.find(item => Number(item.idPedido) === Number(idPedido));
+            if (!p) return;
+
+            const cliente = `${usuarioActual.nombre || ''} ${usuarioActual.apellidos || ''}`.trim() || usuarioActual.email;
+            const serie = p.numSerie || `B001-${String(p.idPedido).padStart(6, '0')}`;
+            const filasItemsHtml = (Array.isArray(p.items) && p.items.length > 0)
+                ? p.items.map(it => `
+                    <tr>
+                        <td>${it.nombre}</td>
+                        <td style="text-align:center;">${it.cantidad}</td>
+                        <td style="text-align:right;">S/. ${Number(it.precioUnitario || 0).toFixed(2)}</td>
+                        <td style="text-align:right;">S/. ${Number(it.subtotal || 0).toFixed(2)}</td>
+                    </tr>
+                `).join('')
+                : `<tr><td>Consumo Shimaya Ramen</td><td style="text-align:center;">1</td><td style="text-align:right;">S/. ${Number(p.montoTotal || 0).toFixed(2)}</td><td style="text-align:right;">S/. ${Number(p.montoTotal || 0).toFixed(2)}</td></tr>`;
+
+            const ventana = window.open('', '_blank', 'width=760,height=680');
+            ventana.document.write(`
+                <html>
+                <head>
+                    <title>Comprobante ${serie} - Shimaya Ramen</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 36px; color: #111; }
+                        .header { border-bottom: 3px solid #d32f2f; padding-bottom: 14px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+                        .brand { font-size: 22px; font-weight: 800; }
+                        .brand span { color: #d32f2f; }
+                        .info { margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+                        th { background: #181818; color: #fff; padding: 10px; text-align: left; }
+                        td { padding: 10px; border-bottom: 1px solid #ddd; }
+                        .total { text-align: right; font-size: 18px; font-weight: bold; margin-top: 18px; }
+                        .footer { margin-top: 32px; font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 12px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="brand">SHIMAYA <span>RAMEN</span></div>
+                        <div style="text-align:right;">
+                            <div><strong>BOLETA ELECTRÓNICA</strong></div>
+                            <div>${serie} • Pedido #${p.idPedido}</div>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <div><strong>Cliente:</strong> ${cliente} (${usuarioActual.email})</div>
+                        <div><strong>Fecha:</strong> ${formatearFechaCorta(p.fechaHora)} ${formatearHoraAmPm(extraerHoraDeDateTime(p.fechaHora))}</div>
+                        <div><strong>Entrega:</strong> ${p.tipoEntrega || 'DELIVERY'} ${p.direccionEnvio ? '- ' + p.direccionEnvio : ''}</div>
+                        <div><strong>Estado:</strong> ${capitalizarTexto(p.estadoPedido || 'En preparación')}</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th style="text-align:center;">Cant.</th>
+                                <th style="text-align:right;">P. Unit.</th>
+                                <th style="text-align:right;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>${filasItemsHtml}</tbody>
+                    </table>
+                    <div class="total">Total Pagado: S/. ${Number(p.montoTotal || 0).toFixed(2)}</div>
+                    <div class="footer">
+                        Gracias por tu preferencia en Shimaya Ramen. Atención al cliente: 960 166 995 | ramen@shimaya.pe
+                    </div>
+                    <script>window.onload = function() { window.print(); };<\/script>
+                </body>
+                </html>
+            `);
+            ventana.document.close();
+        }
+
+        // =========================================================
+        // SECCIÓN RESERVAS (RESUMEN EN PERFIL + VISTA MIS RESERVAS)
+        // =========================================================
+        async function cargarReservasUsuario(email) {
+            try {
+                const resp = await fetch(`${API_BASE}/api/perfil/reservas?email=${encodeURIComponent(email)}`, { cache: 'no-store' });
+                if (!resp.ok) {
+                    console.error('Error HTTP en /api/perfil/reservas:', resp.status);
+                    return;
+                }
+
+                reservasActuales = await resp.json();
+                reservasFiltradas = [...reservasActuales];
+                pintarResumenReservaPerfil(reservasActuales);
+                renderizarVistaMisReservas();
+            } catch (err) {
+                console.warn('No se pudieron cargar reservas:', err);
+            }
+        }
+
+        function pintarResumenReservaPerfil(reservas) {
+            const badge = document.getElementById('contadorReservas');
+            const tarjetaResumen = document.getElementById('tarjetaReservaResumen');
+
+            if (!reservas || reservas.length === 0) {
+                badge.style.display = 'none';
+                tarjetaResumen.innerHTML = `
+                    <div class="reserva-preview-box">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="reserva-thumb-fallback">
+                                <i class="bi bi-calendar-x fs-4"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold small text-uppercase mb-1">SIN RESERVAS ACTIVAS</div>
+                                <div class="text-secondary small">Reserva una mesa pronto.</div>
+                            </div>
+                        </div>
+                        <a href="reservas.html" class="btn-shimaya-red">Reservar</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const activas = reservas.filter(r => (r.estado || '').toUpperCase() !== 'CANCELADA');
+            badge.textContent = activas.length;
+            badge.style.display = activas.length > 0 ? 'inline-block' : 'none';
+
+            const principal = activas.length > 0 ? activas[0] : reservas[0];
+            const estadoPrincipal = (principal.estado || 'CONFIRMADA').toUpperCase();
+            const etiquetaSuperior = estadoPrincipal === 'CONFIRMADA' ? 'PRÓXIMA RESERVA' : `RESERVA ${estadoPrincipal}`;
+            const sedeInfo = obtenerInfoSede(principal.idSede, principal.nombreSede);
+            const fechaBonita = formatearFechaConDia(principal.fechaReserva);
+            const horaFormateada = formatearHoraAmPm(principal.horaReserva);
+            const textoPersonas = `${principal.numPersonas} ${Number(principal.numPersonas) === 1 ? 'persona' : 'personas'}`;
+
+            tarjetaResumen.innerHTML = `
+                <div class="reserva-preview-box">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${sedeInfo.imagen}"
+                             alt="Sede ${sedeInfo.nombre}"
+                             class="reserva-thumb"
+                             onerror="this.outerHTML='<div class=\\'reserva-thumb-fallback\\'><i class=\\'bi bi-shop fs-3\\'></i></div>'">
+                        <div class="lh-sm">
+                            <div class="fw-bold small text-uppercase text-white mb-1">${etiquetaSuperior} • ${sedeInfo.nombre}</div>
+                            <div class="text-light small">${fechaBonita}</div>
+                            <div class="text-secondary small">${horaFormateada}</div>
+                            <div class="text-secondary small">${textoPersonas}</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-ver-detalle" onclick="irADetalleReserva(${principal.idReserva})">
+                        Ver detalle
+                    </button>
+                </div>
+            `;
+        }
+
+        function irADetalleReserva(idReserva) {
+            cambiarVista('reservas');
+            seleccionarReservaEnPanel(idReserva);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderizarVistaMisReservas() {
+            const contenedorActual = document.getElementById('contenedorReservaActualCard');
+
+            if (!reservasActuales || reservasActuales.length === 0) {
+                contenedorActual.innerHTML = `
+                    <div class="card-reserva-actual mb-4">
+                        <span class="ribbon-reserva-actual">RESERVA ACTUAL</span>
+                        <div class="text-center py-3 text-secondary small">
+                            No tienes reservas registradas actualmente.
+                            <div class="mt-2">
+                                <a href="reservas.html" class="btn-shimaya-red">Hacer una reserva</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                renderizarTablaHistorial();
+                return;
+            }
+
+            const activas = reservasActuales.filter(r => (r.estado || '').toUpperCase() !== 'CANCELADA');
+            const actual = activas.length > 0 ? activas[0] : reservasActuales[0];
+
+            if (!reservaSeleccionada || !reservasActuales.some(r => Number(r.idReserva) === Number(reservaSeleccionada.idReserva))) {
+                reservaSeleccionada = actual;
+            } else {
+                reservaSeleccionada = reservasActuales.find(r => Number(r.idReserva) === Number(reservaSeleccionada.idReserva));
+            }
+
+            const estadoAct = (actual.estado || 'CONFIRMADA').toUpperCase();
+            const esConfirmada = estadoAct === 'CONFIRMADA';
+            const sedeInfo = obtenerInfoSede(actual.idSede, actual.nombreSede);
+            const fechaBonita = formatearFechaConDia(actual.fechaReserva);
+            const horaFormateada = formatearHoraAmPm(actual.horaReserva);
+            const textoPersonas = `${actual.numPersonas} ${Number(actual.numPersonas) === 1 ? 'persona' : 'personas'}`;
+
+            contenedorActual.innerHTML = `
+                <div class="card-reserva-actual mb-4" onclick="seleccionarReservaEnPanel(${actual.idReserva})" style="cursor: pointer;">
+                    <span class="ribbon-reserva-actual">${esConfirmada ? 'RESERVA ACTUAL' : 'ÚLTIMA RESERVA'}</span>
+
+                    <div class="d-flex justify-content-end mb-2">
+                        <span class="${esConfirmada ? 'badge-estado-confirmada' : 'badge-estado-cancelada'}">
+                            ${esConfirmada ? 'Confirmada' : 'Cancelada'}
+                        </span>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="${sedeInfo.imagen}"
+                                 alt="${sedeInfo.nombre}"
+                                 class="reserva-thumb"
+                                 style="width: 115px; height: 74px;"
+                                 onerror="this.src='/images/Logo.png'">
+                            <div class="lh-base small">
+                                <div class="text-white fw-semibold">${fechaBonita}</div>
+                                <div class="text-light">${horaFormateada}</div>
+                                <div class="text-secondary">${textoPersonas}</div>
+                                <div class="text-secondary">Sede ${sedeInfo.nombre}</div>
+                            </div>
+                        </div>
+
+                        <div class="text-end ms-auto" onclick="event.stopPropagation();">
+                            <div class="text-danger fw-bold small mb-1" style="font-size: 0.75rem;">Exportar</div>
+                            <button type="button" class="btn-exportar-pdf" onclick="exportarReservaPDF(${actual.idReserva})">
+                                <i class="bi bi-file-earmark-pdf-fill text-danger"></i> PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            renderizarTablaHistorial();
+            seleccionarReservaEnPanel(reservaSeleccionada.idReserva);
+        }
+
+        function renderizarTablaHistorial() {
+            const tbody = document.getElementById('tbodyHistorialReservas');
+            const paginacionEl = document.getElementById('paginacionReservas');
+            const contadorEl = document.getElementById('textoContadorHistorial');
+
+            const total = reservasFiltradas.length;
+            if (total === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-secondary py-4">No se encontraron reservas en el rango seleccionado.</td></tr>`;
+                paginacionEl.innerHTML = '';
+                contadorEl.textContent = 'Mostrando 0 de 0 reservas';
+                return;
+            }
+
+            const totalPaginas = Math.ceil(total / RESERVAS_POR_PAGINA);
+            if (paginaActualReservas > totalPaginas) paginaActualReservas = 1;
+
+            const inicio = (paginaActualReservas - 1) * RESERVAS_POR_PAGINA;
+            const fin = Math.min(inicio + RESERVAS_POR_PAGINA, total);
+            const slice = reservasFiltradas.slice(inicio, fin);
+
+            tbody.innerHTML = slice.map(r => {
+                const codigo = `#RSV-${String(r.idReserva).padStart(5, '0')}`;
+                const fechaCorta = formatearFechaCorta(r.fechaReserva);
+                const hora = formatearHoraAmPm(r.horaReserva);
+                const sedeInfo = obtenerInfoSede(r.idSede, r.nombreSede);
+                const estado = (r.estado || 'CONFIRMADA').toUpperCase();
+                const esConfirmada = estado === 'CONFIRMADA';
+                const seleccionada = reservaSeleccionada && Number(reservaSeleccionada.idReserva) === Number(r.idReserva);
+
+                return `
+                    <tr class="${seleccionada ? 'fila-seleccionada' : ''}" onclick="seleccionarReservaEnPanel(${r.idReserva})">
+                        <td>
+                            <div class="fw-bold text-white">${codigo}</div>
+                            <div class="text-secondary small">${fechaCorta} • ${hora}</div>
+                        </td>
+                        <td>${r.numPersonas} ${Number(r.numPersonas) === 1 ? 'persona' : 'personas'}</td>
+                        <td>${sedeInfo.nombre}</td>
+                        <td>
+                            <span class="${esConfirmada ? 'badge-estado-confirmada' : 'badge-estado-cancelada'}">
+                                ${esConfirmada ? 'Confirmada' : 'Cancelada'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            let pagHtml = `
+                <button type="button" class="page-btn" ${paginaActualReservas === 1 ? 'disabled' : ''} onclick="cambiarPaginaReservas(${paginaActualReservas - 1})">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            `;
+            for (let p = 1; p <= totalPaginas; p++) {
+                pagHtml += `
+                    <button type="button" class="page-btn ${p === paginaActualReservas ? 'active' : ''}" onclick="cambiarPaginaReservas(${p})">${p}</button>
+                `;
+            }
+            pagHtml += `
+                <button type="button" class="page-btn" ${paginaActualReservas === totalPaginas ? 'disabled' : ''} onclick="cambiarPaginaReservas(${paginaActualReservas + 1})">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            `;
+            paginacionEl.innerHTML = pagHtml;
+            contadorEl.textContent = `Mostrando ${inicio + 1} a ${fin} de ${total} reservas`;
+        }
+
+        function cambiarPaginaReservas(nuevaPagina) {
+            paginaActualReservas = nuevaPagina;
+            renderizarTablaHistorial();
+        }
+
+        function filtrarHistorialReservas() {
+            const inicio = document.getElementById('filtroFechaInicio').value;
+            const fin = document.getElementById('filtroFechaFin').value;
+
+            reservasFiltradas = reservasActuales.filter(r => {
+                const fecha = String(r.fechaReserva || '').split('T')[0];
+                if (inicio && fecha < inicio) return false;
+                if (fin && fecha > fin) return false;
+                return true;
+            });
+
+            document.getElementById('btnLimpiarFiltro').style.display = (inicio || fin) ? 'inline-block' : 'none';
+            paginaActualReservas = 1;
+            renderizarTablaHistorial();
+        }
+
+        function limpiarFiltroReservas() {
+            document.getElementById('filtroFechaInicio').value = '';
+            document.getElementById('filtroFechaFin').value = '';
+            document.getElementById('btnLimpiarFiltro').style.display = 'none';
+            reservasFiltradas = [...reservasActuales];
+            paginaActualReservas = 1;
+            renderizarTablaHistorial();
+        }
+
+        function seleccionarReservaEnPanel(idReserva) {
+            const r = reservasActuales.find(item => Number(item.idReserva) === Number(idReserva));
+            if (!r) return;
+
+            reservaSeleccionada = r;
+            renderizarTablaHistorial();
+
+            const estado = (r.estado || 'CONFIRMADA').toUpperCase();
+            const esConfirmada = estado === 'CONFIRMADA';
+            const sedeInfo = obtenerInfoSede(r.idSede, r.nombreSede);
+            const codigoFormateado = `#RSV-${String(r.idReserva).padStart(5, '0')}`;
+
+            const imgDetalleEl = document.getElementById('detalleImagenSede');
+            if (imgDetalleEl) {
+                imgDetalleEl.src = sedeInfo.imagen;
+                imgDetalleEl.alt = `Sede ${sedeInfo.nombre}`;
+            }
+
+            const pillEstado = document.getElementById('detallePanelEstadoPill');
+            pillEstado.textContent = esConfirmada ? 'Confirmada' : 'Cancelada';
+            pillEstado.className = esConfirmada ? 'badge-estado-confirmada' : 'badge-estado-cancelada';
+
+            const iconoCal = document.getElementById('detalleIconoCalendario');
+            iconoCal.style.color = esConfirmada ? '#22c55e' : '#e63946';
+            iconoCal.innerHTML = esConfirmada ? '<i class="bi bi-calendar2-check"></i>' : '<i class="bi bi-calendar2-x"></i>';
+
+            document.getElementById('detalleTituloReserva').textContent = esConfirmada ? 'Reserva actual' : 'Reserva cancelada';
+            document.getElementById('detalleCodigoReserva').textContent = `Código de reserva: ${codigoFormateado}`;
+            document.getElementById('detalleFecha').textContent = formatearFechaConDia(r.fechaReserva);
+            document.getElementById('detalleHora').textContent = formatearHoraAmPm(r.horaReserva);
+            document.getElementById('detallePersonas').textContent = `${r.numPersonas} ${Number(r.numPersonas) === 1 ? 'persona' : 'personas'}`;
+
+            const direccionCompleta = sedeInfo.direccion
+                ? `<strong>${sedeInfo.nombre}</strong><br>${sedeInfo.direccion}, ${sedeInfo.distrito}`
+                : `<strong>${sedeInfo.nombre}</strong><br>${sedeInfo.distrito}`;
+            document.getElementById('detalleSede').innerHTML = direccionCompleta;
+
+            const telefonoMostrar = (usuarioActual && usuarioActual.telefono && usuarioActual.telefono.trim() !== '')
+                ? usuarioActual.telefono
+                : (sedeInfo.telefono || '960 166 995');
+            document.getElementById('detalleTelefono').textContent = telefonoMostrar;
+
+            const filaOcasion = document.getElementById('filaDetalleOcasion');
+            if (r.ocasionEspecial && r.ocasionEspecial !== 'Ninguna') {
+                filaOcasion.style.display = 'flex';
+                document.getElementById('detalleOcasion').textContent = r.ocasionEspecial;
+            } else {
+                filaOcasion.style.display = 'none';
+            }
+
+            const filaComentarios = document.getElementById('filaDetalleComentarios');
+            if (r.comentarios && r.comentarios.trim() !== '') {
+                filaComentarios.style.display = 'flex';
+                document.getElementById('detalleComentarios').textContent = r.comentarios;
+            } else {
+                filaComentarios.style.display = 'none';
+            }
+
+            document.getElementById('bloqueConfirmarCancelacion').style.display = 'none';
+            document.getElementById('bloqueReservaCanceladaExito').style.display = 'none';
+            document.getElementById('btnIniciarCancelacion').style.display = esConfirmada ? 'inline-block' : 'none';
+
+            const btnConfirmar = document.getElementById('btnConfirmarCancelacionFinal');
+            btnConfirmar.disabled = false;
+            btnConfirmar.textContent = 'Sí, cancelar reserva';
+        }
+
+        function mostrarConfirmacionCancelar() {
+            document.getElementById('bloqueConfirmarCancelacion').style.display = 'block';
+            document.getElementById('btnIniciarCancelacion').style.display = 'none';
+        }
+
+        function ocultarConfirmacionCancelar() {
+            document.getElementById('bloqueConfirmarCancelacion').style.display = 'none';
+            document.getElementById('btnIniciarCancelacion').style.display = 'inline-block';
+        }
+
+        async function ejecutarCancelacionReserva() {
+            if (!reservaSeleccionada) return;
+
+            const btnConfirmar = document.getElementById('btnConfirmarCancelacionFinal');
+            btnConfirmar.disabled = true;
+            btnConfirmar.textContent = 'Cancelando...';
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/perfil/reservas/${reservaSeleccionada.idReserva}/cancelar`, {
+                    method: 'PUT'
+                });
+
+                if (!resp.ok) {
+                    btnConfirmar.disabled = false;
+                    btnConfirmar.textContent = 'Sí, cancelar reserva';
+                    alert('❌ No se pudo cancelar la reserva en el servidor.');
+                    return;
+                }
+
+                reservaSeleccionada.estado = 'CANCELADA';
+                const idx = reservasActuales.findIndex(r => Number(r.idReserva) === Number(reservaSeleccionada.idReserva));
+                if (idx !== -1) reservasActuales[idx].estado = 'CANCELADA';
+
+                reservasFiltradas = [...reservasActuales];
+                pintarResumenReservaPerfil(reservasActuales);
+                renderizarVistaMisReservas();
+
+                document.getElementById('bloqueConfirmarCancelacion').style.display = 'none';
+                document.getElementById('btnIniciarCancelacion').style.display = 'none';
+                document.getElementById('bloqueReservaCanceladaExito').style.display = 'block';
+            } catch (err) {
+                btnConfirmar.disabled = false;
+                btnConfirmar.textContent = 'Sí, cancelar reserva';
+                alert('❌ Error de conexión con el servidor.');
+            }
+        }
+
+        function exportarReservaPDF(idReserva) {
+            const r = reservasActuales.find(item => Number(item.idReserva) === Number(idReserva));
+            if (!r) return;
+
+            const sedeInfo = obtenerInfoSede(r.idSede, r.nombreSede);
+            const codigo = `#RSV-${String(r.idReserva).padStart(5, '0')}`;
+            const cliente = `${usuarioActual.nombre || ''} ${usuarioActual.apellidos || ''}`.trim() || usuarioActual.email;
+
+            const ventana = window.open('', '_blank', 'width=720,height=650');
+            ventana.document.write(`
+                <html>
+                <head>
+                    <title>Comprobante de Reserva ${codigo} - Shimaya Ramen</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 36px; color: #111; }
+                        .header { border-bottom: 3px solid #d32f2f; padding-bottom: 14px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+                        .brand { font-size: 22px; font-weight: 800; }
+                        .brand span { color: #d32f2f; }
+                        .row { margin-bottom: 12px; font-size: 14px; }
+                        .label { font-weight: bold; display: inline-block; width: 170px; color: #444; }
+                        .footer { margin-top: 32px; font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 12px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="brand">SHIMAYA <span>RAMEN</span></div>
+                        <div><strong>Código:</strong> ${codigo}</div>
+                    </div>
+                    <h3>Comprobante de Reserva de Mesa</h3>
+                    <div class="row"><span class="label">Estado:</span> ${(r.estado || 'CONFIRMADA').toUpperCase()}</div>
+                    <div class="row"><span class="label">Cliente:</span> ${cliente}</div>
+                    <div class="row"><span class="label">Sede:</span> ${sedeInfo.nombre} ${sedeInfo.direccion ? '- ' + sedeInfo.direccion : ''}</div>
+                    <div class="row"><span class="label">Fecha:</span> ${formatearFechaConDia(r.fechaReserva)}</div>
+                    <div class="row"><span class="label">Hora:</span> ${formatearHoraAmPm(r.horaReserva)}</div>
+                    <div class="row"><span class="label">Personas:</span> ${r.numPersonas}</div>
+                    <div class="row"><span class="label">Ocasión especial:</span> ${r.ocasionEspecial || 'Ninguna'}</div>
+                    <div class="footer">
+                        Llega 10 minutos antes de tu reserva. Atención al cliente: 960 166 995 | ramen@shimaya.pe
+                    </div>
+                    <script>window.onload = function() { window.print(); };<\/script>
+                </body>
+                </html>
+            `);
+            ventana.document.close();
+        }
+
+        function cambiarVista(vista) {
+            document.getElementById('vistaPerfil').style.display = vista === 'perfil' ? 'block' : 'none';
+            document.getElementById('vistaPedidos').style.display = vista === 'pedidos' ? 'block' : 'none';
+            document.getElementById('vistaReservas').style.display = vista === 'reservas' ? 'block' : 'none';
+
+            document.getElementById('btnTabPerfil').classList.toggle('active', vista === 'perfil');
+            document.getElementById('btnTabPedidos').classList.toggle('active', vista === 'pedidos');
+            document.getElementById('btnTabReservas').classList.toggle('active', vista === 'reservas');
+
+            if (vista === 'reservas') {
+                renderizarVistaMisReservas();
+            } else if (vista === 'pedidos') {
+                renderizarTablaPedidos();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('usuarioLogueado');
+            localStorage.removeItem('usuarioData');
+            localStorage.removeItem('usuarioId');
+            localStorage.removeItem('usuarioNombre');
+            localStorage.removeItem('usuarioApellidos');
+            localStorage.removeItem('usuarioEmail');
+            localStorage.removeItem('usuarioTelefono');
+            localStorage.removeItem('usuarioDireccion');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimaya Ramen - Mi Pedido</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #050505;
+            background-image: radial-gradient(circle at 12% 18%, rgba(180, 20, 30, 0.12) 0%, transparent 40%),
+                              radial-gradient(circle at 88% 82%, rgba(140, 15, 25, 0.08) 0%, transparent 45%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Fijo */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 0;
+            position: fixed;
+            top: 0; left: 0; right: 0; z-index: 1000;
+        }
+        .nav-link { color: #d1d1d1 !important; font-weight: 500; font-size: 0.9rem; letter-spacing: 1px; }
+        .nav-link:hover { color: #e63946 !important; }
+
+        /* Contenedor Principal */
+        .cart-wrapper {
+            padding-top: 115px;
+            padding-bottom: 60px;
+            flex: 1;
+        }
+        .titulo-mi-pedido {
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+            margin-bottom: 28px;
+        }
+        .titulo-mi-pedido::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 55px;
+            height: 3px;
+            background-color: #d32f2f;
+            border-radius: 2px;
+        }
+
+        /* Encabezado Tabla Productos */
+        .productos-header {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr 1fr 1fr 40px;
+            color: #9e9e9e;
+            font-size: 0.85rem;
+            padding: 0 18px 12px 18px;
+        }
+        @media (max-width: 767px) {
+            .productos-header { display: none; }
+        }
+
+        /* Tarjetas de Ítems del Carrito */
+        .cart-item {
+            background-color: #111111;
+            border: 1px solid #262626;
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: grid;
+            grid-template-columns: 2.5fr 1fr 1fr 1fr 40px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            transition: border-color 0.25s;
+        }
+        .cart-item:hover { border-color: #444; }
+        @media (max-width: 767px) {
+            .cart-item {
+                grid-template-columns: 1fr;
+                text-align: left;
+            }
+        }
+        .cart-item-img {
+            width: 68px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid #333;
+            flex-shrink: 0;
+        }
+        .cart-title { font-size: 0.95rem; font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 2px; }
+        .cart-variant { font-size: 0.78rem; color: #999; }
+        .cart-variant span { color: #e63946; font-weight: 600; }
+
+        /* Control de Cantidad Vertical */
+        .qty-vertical {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .qty-buttons-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .btn-qty-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #b71c1c;
+            background: transparent;
+            color: #e63946;
+            font-size: 0.75rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-qty-circle:hover {
+            background-color: #d32f2f;
+            color: #fff;
+        }
+        .btn-remove {
+            color: #b71c1c;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .btn-remove:hover { color: #ff5252; }
+
+        /* Observaciones del Pedido */
+        .observaciones-box {
+            background-color: #111111;
+            border: 1px solid #262626;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 28px;
+        }
+        .observaciones-textarea {
+            background-color: #242424 !important;
+            border: 1px solid #333 !important;
+            color: #ffffff !important;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            resize: none;
+        }
+
+        /* Tarjetas Derecha */
+        .panel-entrega-rojo {
+            background-color: #111111;
+            border: 1px solid #b71c1c;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .panel-pago-gris {
+            background-color: #111111;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .panel-resumen-azul {
+            background-color: #111111;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .badge-autocompletado {
+            background-color: rgba(25, 135, 84, 0.2);
+            border: 1px solid #2ea043;
+            color: #4ade80;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .form-check-input:checked {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+
+        .btn-cambiar-tel {
+            background: transparent;
+            border: 1px solid #b71c1c;
+            color: #e63946;
+            font-size: 0.72rem;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+        .btn-cambiar-tel:hover {
+            background-color: #d32f2f;
+            color: #fff;
+        }
+
+        .separador-o {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #777;
+            font-size: 0.78rem;
+            margin: 14px 0;
+        }
+        .separador-o::before, .separador-o::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px dashed #333;
+        }
+        .separador-o:not(:empty)::before { margin-right: 10px; }
+        .separador-o:not(:empty)::after { margin-left: 10px; }
+
+        .delivery-toggle .btn-outline-danger {
+            border-color: #333;
+            color: #ccc;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .delivery-toggle .btn-check:checked + .btn-outline-danger {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+            color: #fff;
+        }
+
+        .metodo-pago-box {
+            background-color: #191919;
+            border: 1px solid #2b2b2b;
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+        .metodo-pago-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            cursor: pointer;
+        }
+
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; color: #bbb; font-size: 0.9rem; }
+        .summary-total { font-size: 1.15rem; font-weight: 800; color: #fff; border-top: 1px solid #2d2d2d; padding-top: 14px; margin-top: 12px; }
+
+        .btn-proceder-pago {
+            background-color: #b71c1c;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            padding: 13px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            margin-top: 18px;
+            transition: background 0.25s, opacity 0.25s;
+        }
+        .btn-proceder-pago:hover:not(:disabled) { background-color: #d32f2f; }
+        .btn-proceder-pago:disabled { opacity: 0.45; cursor: not-allowed; }
+
+        /* Modal Yape / Pago */
+        .modal-content { background-color: #181818; border: 1px solid #444; border-radius: 16px; color: #fff; }
+        .modal-header { border-bottom: 1px solid #333; }
+        .modal-footer { border-top: 1px solid #333; }
+        .yape-qr-box { background: #fff; padding: 14px; display: inline-block; border-radius: 12px; margin: 12px 0; border: 3px solid #742384; }
+        .yape-qr { width: 170px; height: 170px; object-fit: contain; }
+        .destino-pill {
+            background: rgba(116, 35, 132, 0.2);
+            border: 1px solid #742384;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            color: #e9d5ff;
+            margin-bottom: 14px;
+        }
+
+        /* Footer */
+        .footer-shimaya {
+            background-color: #050505;
+            border-top: 1px solid #b71c1c;
+            padding: 36px 0 28px 0;
+            margin-top: 50px;
+        }
+        .social-icon-link {
+            color: #ffffff;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+        .social-icon-link:hover { color: #e63946; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+                <img src="/images/Logo.png" width="48" height="48" class="rounded-circle me-3 shadow" onerror="this.src='https://via.placeholder.com/48'">
+                <div>
+                    <div class="lh-1 fs-5">SHIMAYA</div>
+                    <small class="text-danger fw-bold" style="font-size: 0.75rem;">RAMEN</small>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carta.html">CARTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reservas.html">RESERVAS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sedes.html">SEDES</a></li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="perfil.html" class="text-light fs-4" title="Mi Perfil"><i class="bi bi-person-circle"></i></a>
+                <a href="carrito.html" class="text-danger fs-4 position-relative" title="Carrito">
+                    <i class="bi bi-cart3"></i>
+                    <span id="badgeCarritoNav" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; display: none;">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. CONTENIDO DEL CARRITO -->
+    <div class="container cart-wrapper">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h1 class="titulo-mi-pedido mb-0">MI PEDIDO</h1>
+            <a href="carta.html" class="btn btn-outline-light btn-sm"><i class="bi bi-arrow-left me-1"></i> Seguir pidiendo</a>
+        </div>
+
+        <div class="row g-4">
+            <!-- COLUMNA IZQUIERDA: LISTA DE PRODUCTOS + OBSERVACIONES -->
+            <div class="col-lg-7">
+                <div class="productos-header">
+                    <div>Producto</div>
+                    <div>Precio</div>
+                    <div>Cantidad</div>
+                    <div>Subtotal</div>
+                    <div></div>
+                </div>
+
+                <div id="cart-container"></div>
+
+                <!-- OBSERVACIONES DEL PEDIDO -->
+                <div class="observaciones-box">
+                    <div class="fw-bold small text-uppercase mb-2">OBSERVACIONES DEL PEDIDO (Opcional)</div>
+                    <textarea id="observacionesPedido" class="form-control observaciones-textarea" rows="3" placeholder="Ejemplo: Sin cebolla, extra picante, etc."></textarea>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: 1. DATOS DE ENTREGA / 2. MÉTODO DE PAGO / 3. RESUMEN -->
+            <div class="col-lg-5">
+
+                <!-- 1. DATOS DE ENTREGA -->
+                <div class="panel-entrega-rojo">
+                    <div class="fw-bold small text-uppercase mb-3">1. DATOS DE ENTREGA</div>
+
+                    <!-- Toggle Delivery vs Recojo -->
+                    <div class="btn-group w-100 mb-3 delivery-toggle" role="group">
+                        <input type="radio" class="btn-check" name="tipoEntrega" id="optDelivery" checked onchange="cambiarTipoEntrega()">
+                        <label class="btn btn-outline-danger py-1" for="optDelivery"><i class="bi bi-bicycle me-1"></i> Delivery</label>
+
+                        <input type="radio" class="btn-check" name="tipoEntrega" id="optRecojo" onchange="cambiarTipoEntrega()">
+                        <label class="btn btn-outline-danger py-1" for="optRecojo"><i class="bi bi-shop me-1"></i> Recojo en Local</label>
+                    </div>
+
+                    <!-- BLOQUE DELIVERY (GESTIÓN INTELIGENTE DE DIRECCIONES DEL PERFIL + BD) -->
+                    <div id="bloqueDelivery">
+
+                        <!-- CASO A: EL PERFIL YA TIENE DIRECCIONES GUARDADAS EN MYSQL -->
+                        <div id="seccionDireccionGuardada" style="display: none;">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="modoDireccion" id="radioUsarGuardada" checked onchange="alternarModoDireccion('guardada')">
+                                    <label class="form-check-label small fw-semibold text-white" for="radioUsarGuardada">
+                                        Utilizar mi dirección guardada
+                                    </label>
+                                </div>
+                                <span class="badge-autocompletado">Autocompletado</span>
+                            </div>
+
+                            <!-- Selector si el usuario tiene 2 o más direcciones en su perfil -->
+                            <div id="wrapperSelectMultiplesDirs" class="mb-2 ps-4" style="display: none;">
+                                <select id="selectUbicacionGuardada" class="form-select form-select-sm bg-dark text-white border-secondary" onchange="seleccionarDireccionGuardada()">
+                                </select>
+                            </div>
+
+                            <!-- Vista previa de la dirección guardada seleccionada -->
+                            <div id="detalleDireccionGuardada" class="ps-4 text-secondary small lh-base mb-3">
+                                <div class="text-light fw-semibold" id="textoDirExactaGuardada">-</div>
+                                <div id="textoDistritoGuardado">Lima</div>
+                                <div id="textoReferenciaGuardada"></div>
+                            </div>
+
+                            <!-- Teléfono de contacto -->
+                            <div class="ps-4 mb-2">
+                                <label class="form-label text-secondary small mb-1">Teléfono de contacto</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="text" id="telefonoContactoDelivery" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="987 654 321" readonly>
+                                    <button type="button" class="btn-cambiar-tel" id="btnEditarTelefono" onclick="habilitarEdicionTelefono()">Cambiar</button>
+                                </div>
+                            </div>
+
+                            <div class="separador-o">o</div>
+
+                            <!-- Opción para agregar/usar otra dirección -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="modoDireccion" id="radioUsarOtra" onchange="alternarModoDireccion('nueva')">
+                                <label class="form-check-label small text-light" for="radioUsarOtra">
+                                    Usar otra dirección (y guardarla en mi perfil)
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CASO B: NO TIENE DIRECCIONES GUARDADAS EN EL PERFIL -->
+                        <div id="avisoSinDireccion" class="p-2 mb-3 rounded small" style="display: none; background: rgba(230, 57, 70, 0.12); border: 1px dashed #e63946; color: #ffb3b8;">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                            Aún no tienes una dirección registrada en tu perfil. Agrégala aquí y se guardará automáticamente en tu cuenta.
+                        </div>
+
+                        <!-- FORMULARIO PARA NUEVA DIRECCIÓN -->
+                        <div id="formularioNuevaDireccion" class="mt-3" style="display: none;">
+                            <div class="row g-2 mb-2">
+                                <div class="col-5">
+                                    <label class="form-label text-secondary small mb-1">Etiqueta</label>
+                                    <select id="nuevaEtiquetaDelivery" class="form-select form-select-sm bg-dark text-white border-secondary">
+                                        <option value="CASA">CASA</option>
+                                        <option value="TRABAJO">TRABAJO</option>
+                                        <option value="OTRO">OTRO</option>
+                                    </select>
+                                </div>
+                                <div class="col-7">
+                                    <label class="form-label text-secondary small mb-1">Distrito *</label>
+                                    <select id="distritoDelivery" class="form-select form-select-sm bg-dark text-white border-secondary">
+                                        <option value="">Selecciona distrito...</option>
+                                        <option value="Miraflores">Miraflores</option>
+                                        <option value="San Isidro">San Isidro</option>
+                                        <option value="Santiago de Surco">Santiago de Surco</option>
+                                        <option value="San Borja">San Borja</option>
+                                        <option value="La Molina">La Molina</option>
+                                        <option value="Barranco">Barranco</option>
+                                        <option value="Surquillo">Surquillo</option>
+                                        <option value="Jesús María">Jesús María</option>
+                                        <option value="Lince">Lince</option>
+                                        <option value="Magdalena del Mar">Magdalena del Mar</option>
+                                        <option value="Pueblo Libre">Pueblo Libre</option>
+                                        <option value="San Miguel">San Miguel</option>
+                                        <option value="Santa Anita">Santa Anita</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label text-secondary small mb-1">Dirección exacta *</label>
+                                <input type="text" id="direccionDelivery" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ej: Av. Benavides 123, Miraflores">
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label text-secondary small mb-1">Referencia (opcional)</label>
+                                <input type="text" id="referenciaDelivery" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ej: Frente al parque, piso 3">
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label text-secondary small mb-1">Teléfono de contacto *</label>
+                                <input type="text" id="telefonoNuevaDir" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="987 654 321">
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkGuardarEnPerfil" checked>
+                                    <label class="form-check-label small text-secondary" for="chkGuardarEnPerfil">
+                                        Guardar en mi perfil
+                                    </label>
+                                </div>
+                                <button type="button" class="btn btn-outline-danger btn-sm py-1 px-2" style="font-size: 0.75rem;" onclick="guardarDireccionEnBDManual()">
+                                    <i class="bi bi-bookmark-plus me-1"></i> Guardar ahora
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BLOQUE RECOJO EN SEDE -->
+                    <div id="bloqueRecojo" style="display: none;">
+                        <label class="form-label text-secondary small mb-1">Selecciona la sede para recoger:</label>
+                        <select id="sedeRecojo" class="form-select form-select-sm bg-dark text-white border-secondary">
+                            <option value="Sede Miraflores (Av. Benavides 123)">Sede Miraflores - Av. Benavides 123</option>
+                            <option value="Sede Santa Anita (Mall Aventura)">Sede Santa Anita - Mall Aventura</option>
+                            <option value="Sede San Isidro (Av. Camino Real)">Sede San Isidro - Av. Camino Real</option>
+                            <option value="Sede Lince (Av. Arenales 1890)">Sede Lince - Av. Arenales 1890</option>
+                            <option value="Sede La Molina (Av. Flora Tristán 471)">Sede La Molina - Av. Flora Tristán 471</option>
+                            <option value="Sede San Miguel (Plaza San Miguel)">Sede San Miguel - Plaza San Miguel</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 2. MÉTODO DE PAGO -->
+                <div class="panel-pago-gris">
+                    <div class="fw-bold small text-uppercase mb-3">2. MÉTODO DE PAGO</div>
+                    <div class="metodo-pago-box">
+                        <label class="metodo-pago-item">
+                            <span class="d-flex align-items-center gap-2 small">
+                                <input class="form-check-input mt-0" type="radio" name="metodoPago" value="TARJETA" id="pagoTarjeta">
+                                <span>Tarjeta crédito/débito</span>
+                            </span>
+                            <i class="bi bi-credit-card-2-front text-danger fs-5"></i>
+                        </label>
+                        <label class="metodo-pago-item">
+                            <span class="d-flex align-items-center gap-2 small">
+                                <input class="form-check-input mt-0" type="radio" name="metodoPago" value="YAPE" id="pagoYape" checked>
+                                <span>Yape</span>
+                            </span>
+                            <span class="badge" style="background-color: #742384;">yape</span>
+                        </label>
+                        <label class="metodo-pago-item pb-0">
+                            <span class="d-flex align-items-center gap-2 small">
+                                <input class="form-check-input mt-0" type="radio" name="metodoPago" value="EFECTIVO" id="pagoEfectivo">
+                                <span>Efectivo</span>
+                            </span>
+                            <i class="bi bi-cash-stack text-success fs-5"></i>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. RESUMEN DEL PEDIDO -->
+                <div class="panel-resumen-azul">
+                    <div class="fw-bold small text-uppercase mb-3">3. RESUMEN DEL PEDIDO</div>
+                    <div class="summary-row"><span>Subtotal</span><span id="subtotal">S/0.00</span></div>
+                    <div class="summary-row"><span>Delivery</span><span id="costoEnvio">S/5.00</span></div>
+                    <div class="summary-row summary-total"><span>TOTAL</span><span id="total">S/0.00</span></div>
+
+                    <button class="btn-proceder-pago" id="btnPagar" onclick="validarAntesDePagar()" disabled>
+                        PROCEDER AL PAGO
+                    </button>
+                    <div class="text-center text-secondary mt-2" style="font-size: 0.72rem;">
+                        Pago 100% seguro
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MODAL DE YAPE EN TIEMPO REAL -->
+    <div class="modal fade" id="yapeModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white fw-bold"><i class="bi bi-phone me-2"></i>Pago con Yape</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="detenerVerificacionYape()"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="modal-destino" class="destino-pill"></div>
+
+                    <p class="text-secondary mb-1">Escanea el código QR y yapea el monto exacto:</p>
+                    <h3 id="modal-monto" class="text-white fw-bold mb-2">S/ 0.00</h3>
+
+                    <div class="yape-qr-box">
+                        <img src="/images/mi_qr_yape.png" class="yape-qr" alt="QR Yape" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg'">
+                    </div>
+
+                    <p class="text-white fs-6 mb-0">Titular: jefferson Sebastian Sulca </p>
+                    <p class="text-white fs-4 fw-bold mb-3">900 601 538</p>
+
+                    <!-- INDICADOR EN TIEMPO REAL -->
+                    <div id="estadoVerificacionYape" class="p-3 rounded mb-3" style="background: rgba(116, 35, 132, 0.2); border: 1px solid #742384;">
+                        <div class="d-flex align-items-center justify-content-center gap-2 text-white small fw-semibold">
+                            <span class="spinner-border spinner-border-sm text-light"></span>
+                            <span>Esperando confirmación de tu Yape en tiempo real...</span>
+                        </div>
+                    </div>
+
+                    <!-- RESPALDO MANUAL -->
+                    <div class="text-start px-3">
+                        <label class="form-label text-secondary small">O ingresa tu código de operación (6 dígitos):</label>
+                        <input type="text" inputmode="numeric" maxlength="6" class="form-control text-center text-white bg-dark border-secondary fs-5 py-2" id="yapeCode" placeholder="Ej: 123456" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,6)">
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal" onclick="detenerVerificacionYape()">Cancelar</button>
+                    <button type="button" class="btn text-white px-4 fw-bold" style="background-color: #742384;" onclick="procesarPago('YAPE')">Confirmar Manualmente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER SHIMAYA -->
+    <footer class="footer-shimaya">
+        <div class="container">
+            <div class="row align-items-center text-center text-md-start g-4">
+                <div class="col-md-4">
+                    <div class="fw-bold small text-uppercase mb-2">SÍGUENOS</div>
+                    <div class="d-flex justify-content-center justify-content-md-start gap-4">
+                        <a href="#" class="social-icon-link"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon-link"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon-link"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <img src="/images/Logo.png" width="52" height="52" class="rounded-circle mb-2" style="object-fit: cover; border: 2px solid #e63946;" onerror="this.style.display='none'">
+                    <div class="fw-bold lh-1">SHIMAYA</div>
+                    <div class="text-danger fw-bold" style="font-size: 0.72rem; letter-spacing: 2px;">RAMEN</div>
+                </div>
+                <div class="col-md-4 d-flex flex-column align-items-center align-items-md-end">
+                    <div>
+                        <div class="fw-bold small text-uppercase mb-2">ATENCIÓN AL CLIENTE</div>
+                        <div class="text-light small mb-1"><i class="bi bi-whatsapp me-2 text-secondary"></i> 960 166 995</div>
+                        <div class="text-light small"><i class="bi bi-envelope me-2 text-secondary"></i> ramen@shimaya.pe</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- LÓGICA DE CARRITO CONECTADA A SPRING BOOT Y MYSQL -->
+    <script>
+        const API_BASE = window.location.origin.includes('8080') ? '/api' : 'http://localhost:8080/api';
+        let cartItems = [];
+        let direccionesPerfil = [];
+        let direccionGuardadaActiva = null;
+        let totalCalculadoActual = 0;
+        let intervaloYape = null;
+        const COSTO_DELIVERY = 5.00;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            localStorage.removeItem('carritoPedidos');
+
+            const logueado = localStorage.getItem('usuarioLogueado');
+            const email = (localStorage.getItem('usuarioEmail') || '').trim();
+            const estaLogueado = (logueado === 'true' && email !== '');
+
+            if (!estaLogueado) {
+                localStorage.removeItem('carritoItems');
+                alert('⚠️ No hay nadie logueado. Por favor inicia sesión para ver tu carrito.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const telUsuario = localStorage.getItem('usuarioTelefono') || '';
+            document.getElementById('telefonoContactoDelivery').value = telUsuario;
+            document.getElementById('telefonoNuevaDir').value = telUsuario;
+
+            const modalYapeEl = document.getElementById('yapeModal');
+            if (modalYapeEl) {
+                modalYapeEl.addEventListener('hidden.bs.modal', detenerVerificacionYape);
+            }
+
+            await cargarDireccionesDelPerfil(email);
+
+            cartItems = JSON.parse(localStorage.getItem('carritoItems')) || [];
+            renderCart();
+        });
+
+        // =========================================================================
+        // 1. CARGAR DIRECCIONES DEL PERFIL DESDE MYSQL
+        // =========================================================================
+        async function cargarDireccionesDelPerfil(email) {
+            try {
+                let res = await fetch(`${API_BASE}/perfil/direcciones?email=${encodeURIComponent(email)}`, { cache: 'no-store' });
+                if (!res.ok) {
+                    res = await fetch(`${API_BASE}/direcciones/usuario/${encodeURIComponent(email)}`, { cache: 'no-store' });
+                }
+                if (res.ok) {
+                    direccionesPerfil = await res.json();
+                }
+            } catch (e) {
+                console.warn('Error cargando direcciones desde MySQL:', e);
+            }
+
+            if ((!direccionesPerfil || direccionesPerfil.length === 0)) {
+                const dirHabitual = (localStorage.getItem('usuarioDireccion') || '').trim();
+                if (dirHabitual !== '') {
+                    direccionesPerfil = [{
+                        etiqueta: 'CASA',
+                        direccionExacta: dirHabitual,
+                        distrito: 'Lima',
+                        referencia: ''
+                    }];
+                }
+            }
+
+            actualizarInterfazDirecciones();
+        }
+
+        function actualizarInterfazDirecciones() {
+            const secGuardada = document.getElementById('seccionDireccionGuardada');
+            const avisoSinDir = document.getElementById('avisoSinDireccion');
+            const formNueva = document.getElementById('formularioNuevaDireccion');
+            const wrapperMulti = document.getElementById('wrapperSelectMultiplesDirs');
+            const selectMulti = document.getElementById('selectUbicacionGuardada');
+
+            if (direccionesPerfil && direccionesPerfil.length > 0) {
+                secGuardada.style.display = 'block';
+                avisoSinDir.style.display = 'none';
+
+                selectMulti.innerHTML = '';
+                direccionesPerfil.forEach((d, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.textContent = `${d.etiqueta || 'CASA'}: ${d.direccionExacta} (${d.distrito || 'Lima'})`;
+                    selectMulti.appendChild(opt);
+                });
+
+                wrapperMulti.style.display = direccionesPerfil.length > 1 ? 'block' : 'none';
+                document.getElementById('radioUsarGuardada').checked = true;
+                seleccionarDireccionGuardada();
+                alternarModoDireccion('guardada');
+            } else {
+                secGuardada.style.display = 'none';
+                avisoSinDir.style.display = 'block';
+                formNueva.style.display = 'block';
+                direccionGuardadaActiva = null;
+            }
+        }
+
+        function seleccionarDireccionGuardada() {
+            const select = document.getElementById('selectUbicacionGuardada');
+            const idx = parseInt(select.value || '0', 10);
+            const dir = direccionesPerfil[idx] || direccionesPerfil[0];
+            if (!dir) return;
+
+            direccionGuardadaActiva = dir;
+            document.getElementById('textoDirExactaGuardada').textContent = dir.direccionExacta || '-';
+            document.getElementById('textoDistritoGuardado').textContent = `${dir.distrito || 'Lima'}, Lima`;
+            document.getElementById('textoReferenciaGuardada').textContent = dir.referencia ? `Referencia: ${dir.referencia}` : '';
+        }
+
+        function alternarModoDireccion(modo) {
+            const formNueva = document.getElementById('formularioNuevaDireccion');
+            formNueva.style.display = (modo === 'nueva') ? 'block' : 'none';
+        }
+
+        function habilitarEdicionTelefono() {
+            const inputTel = document.getElementById('telefonoContactoDelivery');
+            inputTel.removeAttribute('readonly');
+            inputTel.focus();
+        }
+
+        async function registrarNuevaDireccionEnMySQL(etiqueta, distrito, direccionExacta, referencia, principal) {
+            const email = (localStorage.getItem('usuarioEmail') || '').trim();
+            if (!email || !distrito || !direccionExacta) return false;
+
+            try {
+                const resp = await fetch(`${API_BASE}/perfil/direcciones`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        etiqueta: etiqueta || 'CASA',
+                        distrito: distrito,
+                        direccionExacta: direccionExacta,
+                        referencia: referencia || '',
+                        principal: principal
+                    })
+                });
+
+                if (resp.ok) {
+                    direccionesPerfil = await resp.json();
+                    localStorage.setItem('usuarioDireccion', `${direccionExacta} (${distrito})`);
+                    return true;
+                }
+            } catch (e) {
+                console.warn('No se pudo guardar dirección en MySQL:', e);
+            }
+            return false;
+        }
+
+        async function guardarDireccionEnBDManual() {
+            const etiqueta = document.getElementById('nuevaEtiquetaDelivery').value;
+            const distrito = document.getElementById('distritoDelivery').value.trim();
+            const direccion = document.getElementById('direccionDelivery').value.trim();
+            const referencia = document.getElementById('referenciaDelivery').value.trim();
+
+            if (!distrito || !direccion) {
+                alert('Por favor selecciona un distrito e ingresa tu dirección exacta.');
+                return;
+            }
+
+            const ok = await registrarNuevaDireccionEnMySQL(etiqueta, distrito, direccion, referencia, true);
+            if (ok) {
+                actualizarInterfazDirecciones();
+                alert('✅ Dirección guardada en tu perfil y en la base de datos.');
+            } else {
+                alert('❌ No se pudo guardar la dirección en el servidor.');
+            }
+        }
+
+        function cambiarTipoEntrega() {
+            const esDelivery = document.getElementById('optDelivery').checked;
+            document.getElementById('bloqueDelivery').style.display = esDelivery ? 'block' : 'none';
+            document.getElementById('bloqueRecojo').style.display = esDelivery ? 'none' : 'block';
+            renderCart();
+        }
+
+        // =========================================================================
+        // 2. RENDERIZADO Y CONTROLES DEL CARRITO
+        // =========================================================================
+        function renderCart() {
+            const container = document.getElementById('cart-container');
+            const badge = document.getElementById('badgeCarritoNav');
+            let html = '';
+            let subtotal = 0;
+            let totalUnidades = 0;
+
+            if (cartItems.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 px-3" style="background: #111111; border: 1px dashed #333; border-radius: 14px;">
+                        <i class="bi bi-cart-x text-secondary" style="font-size: 3.5rem;"></i>
+                        <h4 class="mt-3 fw-bold">Tu carrito está vacío</h4>
+                        <p class="text-secondary mb-4">Aún no has agregado platos de nuestra carta.</p>
+                        <a href="carta.html" class="btn btn-danger px-4 py-2 fw-bold">Explorar Carta</a>
+                    </div>
+                `;
+                document.getElementById('btnPagar').disabled = true;
+                badge.style.display = 'none';
+            } else {
+                document.getElementById('btnPagar').disabled = false;
+
+                cartItems.forEach((item, index) => {
+                    let itemTotal = item.precio * item.cantidad;
+                    subtotal += itemTotal;
+                    totalUnidades += item.cantidad;
+                    let varianteHtml = item.variante ? `<div class="cart-variant">Presentación: <span>${item.variante}</span></div>` : '';
+                    let imgSrc = item.imagen || '/images/Logo.png';
+
+                    html += `
+                        <div class="cart-item">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="${imgSrc}" alt="${item.nombre}" class="cart-item-img" onerror="this.src='/images/Logo.png'">
+                                <div>
+                                    <div class="cart-title">${item.nombre}</div>
+                                    ${varianteHtml}
+                                </div>
+                            </div>
+                            <div class="fw-semibold text-white">S/${item.precio.toFixed(2)}</div>
+                            <div>
+                                <div class="qty-vertical">
+                                    <span class="fw-bold text-white">${item.cantidad}</span>
+                                    <div class="qty-buttons-stack">
+                                        <button type="button" class="btn-qty-circle" onclick="cambiarCantidadItem(${index}, -1)">-</button>
+                                        <button type="button" class="btn-qty-circle" onclick="cambiarCantidadItem(${index}, 1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fw-bold text-white">S/${itemTotal.toFixed(2)}</div>
+                            <div class="text-end">
+                                <button type="button" class="btn-remove" title="Eliminar plato" onclick="removeItem(${index})">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+
+                badge.textContent = totalUnidades;
+                badge.style.display = 'inline-block';
+            }
+
+            const esDelivery = document.getElementById('optDelivery').checked;
+            const envio = (cartItems.length > 0 && esDelivery) ? COSTO_DELIVERY : 0;
+            totalCalculadoActual = subtotal + envio;
+
+            document.getElementById('subtotal').innerText = 'S/' + subtotal.toFixed(2);
+            document.getElementById('costoEnvio').innerText = esDelivery ? ('S/' + envio.toFixed(2)) : 'S/0.00';
+            document.getElementById('total').innerText = 'S/' + totalCalculadoActual.toFixed(2);
+            document.getElementById('modal-monto').innerText = 'S/ ' + totalCalculadoActual.toFixed(2);
+        }
+
+        function cambiarCantidadItem(index, delta) {
+            cartItems[index].cantidad += delta;
+            if (cartItems[index].cantidad <= 0) {
+                cartItems.splice(index, 1);
+            }
+            localStorage.setItem('carritoItems', JSON.stringify(cartItems));
+            renderCart();
+        }
+
+        function removeItem(index) {
+            cartItems.splice(index, 1);
+            localStorage.setItem('carritoItems', JSON.stringify(cartItems));
+            renderCart();
+        }
+
+        async function obtenerDestinoYGuardarSiEsNueva() {
+            const esDelivery = document.getElementById('optDelivery').checked;
+            if (!esDelivery) {
+                return `Recojo en: ${document.getElementById('sedeRecojo').value}`;
+            }
+
+            const tieneGuardadas = direccionesPerfil && direccionesPerfil.length > 0;
+            const usaGuardada = tieneGuardadas && document.getElementById('radioUsarGuardada').checked;
+
+            if (usaGuardada && direccionGuardadaActiva) {
+                const ref = direccionGuardadaActiva.referencia ? ` (${direccionGuardadaActiva.referencia})` : '';
+                return `Delivery a: ${direccionGuardadaActiva.direccionExacta}, ${direccionGuardadaActiva.distrito || 'Lima'}${ref}`;
+            }
+
+            const etiqueta = document.getElementById('nuevaEtiquetaDelivery').value;
+            const distrito = document.getElementById('distritoDelivery').value.trim();
+            const direccion = document.getElementById('direccionDelivery').value.trim();
+            const referencia = document.getElementById('referenciaDelivery').value.trim();
+            const guardarEnPerfil = document.getElementById('chkGuardarEnPerfil').checked;
+
+            if (!distrito || !direccion) {
+                alert('Por favor selecciona tu distrito e ingresa tu dirección exacta para el delivery.');
+                document.getElementById('direccionDelivery').focus();
+                return null;
+            }
+
+            if (guardarEnPerfil) {
+                await registrarNuevaDireccionEnMySQL(etiqueta, distrito, direccion, referencia, !tieneGuardadas);
+            }
+
+            const ref = referencia ? ` (${referencia})` : '';
+            return `Delivery a: ${direccion}, ${distrito}${ref}`;
+        }
+
+        // =========================================================================
+        // 3. VALIDACIÓN EN TIEMPO REAL CON YAPE + REGISTRO DEL PEDIDO EN MYSQL
+        // =========================================================================
+        function detenerVerificacionYape() {
+            if (intervaloYape) {
+                clearInterval(intervaloYape);
+                intervaloYape = null;
+            }
+        }
+
+        function iniciarVerificacionTiempoReal(montoExacto) {
+            detenerVerificacionYape();
+            const estadoBox = document.getElementById('estadoVerificacionYape');
+            estadoBox.style.background = 'rgba(116, 35, 132, 0.2)';
+            estadoBox.style.borderColor = '#742384';
+            estadoBox.innerHTML = `
+                <div class="d-flex align-items-center justify-content-center gap-2 text-white small fw-semibold">
+                    <span class="spinner-border spinner-border-sm text-light"></span>
+                    <span>Esperando confirmación de tu Yape por S/ ${montoExacto.toFixed(2)}...</span>
+                </div>
+            `;
+
+            intervaloYape = setInterval(async () => {
+                try {
+                    const resp = await fetch(`${API_BASE}/pagos/verificar-yape?monto=${montoExacto.toFixed(2)}`);
+                    if (!resp.ok) return;
+
+                    const data = await resp.json();
+                    if (data.pagado) {
+                        detenerVerificacionYape();
+                        estadoBox.style.background = 'rgba(25, 135, 84, 0.25)';
+                        estadoBox.style.borderColor = '#2ea043';
+                        estadoBox.innerHTML = `
+                            <div class="text-success fw-bold small">
+                                <i class="bi bi-check-circle-fill me-1"></i> ¡Yape recibido y validado automáticamente!
+                            </div>
+                        `;
+                        document.getElementById('yapeCode').value = String(data.idNotificacion).padStart(6, '0');
+                        setTimeout(() => procesarPago('YAPE', true), 900);
+                    }
+                } catch (e) {
+                    console.warn('Consultando estado de Yape...', e);
+                }
+            }, 3000);
+        }
+
+        async function validarAntesDePagar() {
+            const destinoTexto = await obtenerDestinoYGuardarSiEsNueva();
+            if (!destinoTexto) return;
+
+            const metodoSeleccionado = document.querySelector('input[name="metodoPago"]:checked').value;
+
+            if (metodoSeleccionado === 'YAPE') {
+                document.getElementById('yapeCode').value = '';
+                document.getElementById('modal-destino').innerText = destinoTexto;
+                const modalYape = new bootstrap.Modal(document.getElementById('yapeModal'));
+                modalYape.show();
+                iniciarVerificacionTiempoReal(totalCalculadoActual);
+            } else {
+                document.getElementById('modal-destino').innerText = destinoTexto;
+                await procesarPago(metodoSeleccionado, false);
+            }
+        }
+
+        async function procesarPago(metodoPago = 'YAPE', validadoAutomatico = false) {
+            detenerVerificacionYape();
+            let code = '';
+
+            if (metodoPago === 'YAPE') {
+                code = document.getElementById('yapeCode').value.trim();
+                if (!validadoAutomatico && code.length !== 6) {
+                    alert('Por favor ingresa el código de aprobación de Yape de 6 dígitos o espera la validación automática.');
+                    iniciarVerificacionTiempoReal(totalCalculadoActual);
+                    return;
+                }
+            } else {
+                code = metodoPago === 'TARJETA'
+                    ? 'TARJ-' + Math.floor(100000 + Math.random() * 900000)
+                    : 'EFECTIVO';
+            }
+
+            const email = (localStorage.getItem('usuarioEmail') || '').trim();
+            const esDelivery = document.getElementById('optDelivery').checked;
+            const destinoTexto = document.getElementById('modal-destino').innerText;
+            const obsUsuario = (document.getElementById('observacionesPedido').value || '').trim();
+            const itemsTexto = cartItems.map(i => `${i.cantidad}x ${i.nombre}${i.variante ? ' [' + i.variante + ']' : ''}`).join(', ');
+            const observacionesCompletas = obsUsuario ? `${itemsTexto} | Nota: ${obsUsuario}` : itemsTexto;
+
+            const telContacto = esDelivery
+                ? (document.getElementById('telefonoContactoDelivery').value || document.getElementById('telefonoNuevaDir').value || localStorage.getItem('usuarioTelefono') || '')
+                : (localStorage.getItem('usuarioTelefono') || '');
+
+            const idMetodoMap = { 'YAPE': 1, 'TARJETA': 2, 'EFECTIVO': 3 };
+
+            const payload = {
+                email: email,
+                montoTotal: totalCalculadoActual.toFixed(2),
+                tipoEntrega: esDelivery ? 'DELIVERY' : 'RECOJO',
+                direccionEnvio: destinoTexto,
+                observaciones: observacionesCompletas,
+                numOperacion: code,
+                telefonoYape: telContacto,
+                idMetodo: idMetodoMap[metodoPago] || 1,
+                tipoComprobante: 'BOLETA',
+                items: cartItems.map(item => ({
+                    nombre: item.nombre,
+                    variante: item.variante || '',
+                    cantidad: item.cantidad,
+                    precioUnitario: item.precio
+                }))
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/pedidos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errTxt = await response.text();
+                    alert('❌ Error al registrar el pedido en MySQL: ' + errTxt);
+                    return;
+                }
+
+                const data = await response.json();
+                alert(`✅ ¡Pago procesado con éxito!\nPedido #${data.idPedido} (${data.numSerie}) guardado en MySQL.`);
+
+                localStorage.removeItem('carritoItems');
+                cartItems = [];
+
+                const modalEl = document.getElementById('yapeModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+
+                window.location.href = 'perfil.html';
+            } catch (error) {
+                console.error('Error conectando con Spring Boot:', error);
+                alert('❌ No se pudo conectar con el servidor Spring Boot (puerto 8080).');
+            }
+        }
+    </script>
+</body>
+</html>
